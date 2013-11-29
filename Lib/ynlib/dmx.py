@@ -69,9 +69,6 @@ class DMX(object):
 		self.dmxdata[channel]=chr(intensity)
 		
 	def send(self):
-		print 'send'
-		#self.setValue(channel, intensity)
-
 		# join turns the array data into a string we can send down the DMX
 		sdata=''.join(self.dmxdata)
 		# write the data to the serial port, this sends the data to your fixture
@@ -82,4 +79,3 @@ class DMX(object):
 		self.dmxdata=[chr(0)]*513
 		sdata=''.join(self.dmxdata)
 		self.ser.write(DMXOPEN+DMXINTENSITY+sdata+DMXCLOSE)
-			
