@@ -67,6 +67,42 @@ def DesaturateColor(color, p):
 
 	return (R, G, B)
 
+def DarkenColor(color, p):
+	u"""\
+	Darken a color as a float list (R, G, B) at float position p (0-1).
+	Returns float list (R, G, B)
+	"""
+
+	from ynlib.maths import Interpolate
+
+	R = color[0]
+	G = color[1]
+	B = color[2]
+	
+	R = Interpolate(R, 0, p) 
+	G = Interpolate(G, 0, p) 
+	B = Interpolate(B, 0, p) 
+
+	return (R, G, B)
+
+def BrightenColor(color, p):
+	u"""\
+	Brighten a color as a float list (R, G, B) at float position p (0-1).
+	Returns float list (R, G, B)
+	"""
+
+	from ynlib.maths import Interpolate
+
+	R = color[0]
+	G = color[1]
+	B = color[2]
+	
+	R = Interpolate(R, 1, p) 
+	G = Interpolate(G, 1, p) 
+	B = Interpolate(B, 1, p) 
+
+	return (R, G, B)
+
 def RGBToInt(R, G, B):
 	u"""\
 	Convert color from RGB (0..255) to integer value (0..16M)
