@@ -24,22 +24,53 @@ def AutoLinkString(string):
 	string = re.sub("#([a-zA-Z0-9._\-]+)", "#<a target=\"_blank\" href=\"http://twitter.com/#search?q=%23\\1\">\\1</a>", string)
 	return string
 
+
+
+from calendars import datelocale
+
+ordinals = {
+1: 'st',
+2: 'nd',
+3: 'rd',
+21: 'st',
+22: 'nd',
+23: 'rd',
+31: 'st',
+}
+
+
+def FormattedDate(timestamp, locale = 'en'):
+	u"""\
+	Return date and time as:
+	October 20th, 2010
+	"""
+
+	import time
+
+
+	# day without leading zero
+	day = time.strftime("%d", time.localtime(timestamp))
+	if day.startswith("0"):
+		day = day[-1]
+
+	# right ordinal for day
+	ordinal = 'th'
+	if int(day) in ordinals:
+		ordinal = ordinals[int(day)]
+
+
+	if locale == 'en':
+		return time.strftime("%B " + day + ordinal + ", %Y", time.localtime(timestamp))
+	elif locale == 'de':
+		return time.strftime(day + ". " + datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + " %Y", time.localtime(timestamp))
+
+
 def NaturalWeedkayTimeAndDate(timestamp):
 	u"""\
 	Return date and time as:
 	Wednesday, October 20th, 2010 at 14:12
 	"""
 	import time
-
-	ordinals = {
-	1: 'st',
-	2: 'nd',
-	3: 'rd',
-	21: 'st',
-	22: 'nd',
-	23: 'rd',
-	31: 'st',
-	}
 
 	# day without leading zero
 	day = time.strftime("%d", time.localtime(timestamp))
