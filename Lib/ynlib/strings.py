@@ -26,7 +26,7 @@ def AutoLinkString(string):
 
 
 
-from calendars import datelocale
+
 
 ordinals = {
 1: 'st',
@@ -46,7 +46,7 @@ def FormattedDate(timestamp, locale = 'en'):
 	"""
 
 	import time
-
+	from calendars import datelocale
 
 	# day without leading zero
 	day = time.strftime("%d", time.localtime(timestamp))
