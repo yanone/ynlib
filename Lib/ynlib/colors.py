@@ -1,3 +1,114 @@
+from ynlib.maths import Interpolate
+
+class Color(object):
+	u"""\
+	Universal color class.
+	Color(hex='FFFFFF') - six digit hex value
+	Color(RGB=(0, 127, 255)) - values from 0 to 255
+	Color(CMYK=(0, 50, 50, 100)) - values from 0 to 100
+	"""
+	
+	def __init__(self, hex=None, CMYK=None, RGB=None, A = 1.0):
+		
+		if hex:
+			self.min = 0
+			self.max = 255
+			self.hex = hex
+			self.calcRGB()
+			#self.C, self.M, self.Y, self.K = rgb_to_cmyk(self.R, self.G, self.B)
+			self.type = 'RGB'
+		elif RGB:
+			self.min = 0
+			self.max = 255
+			self.R, self.G, self.B = map(int, RGB)
+			self.calcHex()
+			self.type = 'RGB'
+		elif CMYK:
+			self.min = 0
+			self.max = 100
+			self.C, self.M, self.Y, self.K = map(int, CMYK)
+			self.type = 'CMYK'
+		
+		self.A = A
+
+	def lighten(self, value):
+		u"""\
+		Lighten by float 0..1
+		"""
+		value = float(value)
+		if self.type == 'RGB':
+			other = self.max
+			return Color(RGB=(Interpolate(self.R, other, value), Interpolate(self.G, other, value), Interpolate(self.B, other, value)))
+		elif self.type == 'CMYK':
+			other = self.min
+			return Color(CMYK=(Interpolate(self.C, other, value), Interpolate(self.M, other, value), Interpolate(self.Y, other, value), Interpolate(self.K, other, value)))
+	
+	def darken(self, value):
+		u"""\
+		Darken by float 0..1
+		"""
+		value = float(value)
+		if self.type == 'RGB':
+			other = self.min
+			return Color(RGB=(Interpolate(self.R, other, value), Interpolate(self.G, other, value), Interpolate(self.B, other, value)))
+		elif self.type == 'CMYK':
+			other = self.max
+			return Color(CMYK=(Interpolate(self.C, other, value), Interpolate(self.M, other, value), Interpolate(self.Y, other, value), Interpolate(self.K, other, value)))
+
+	def desaturate(self, value):
+		u"""\
+		Desaturate by float 0..1
+		"""
+		value = float(value)
+		if self.type == 'RGB':
+			other = (self.R + self.G + self.B) / 3 # Average
+			return Color(RGB=(Interpolate(self.R, other, value), Interpolate(self.G, other, value), Interpolate(self.B, other, value)))
+		elif self.type == 'CMYK':
+			other = (self.C + self.M + self.Y) / 3 # Average
+			return Color(CMYK=(Interpolate(self.C, other, value), Interpolate(self.M, other, value), Interpolate(self.Y, other, value), self.K))
+
+	def __repr__(self):
+		if self.type == 'RGB':
+			return "<yn %s Color %s %s %s>" % (self.type, self.R, self.G, self.B)
+		else:
+			return "<yn %s Color %s %s %s %s>" % (self.type, self.C, self.M, self.Y, self.K)
+
+	def calcRGB(self):
+		self.R = int(self.hex[0:2], 16)
+		self.G = int(self.hex[2:4], 16)
+		self.B = int(self.hex[4:6], 16)
+
+	def calcHex(self):
+		u"""\
+		Convert float (R, G, B) tuple to RRGGBB hex value (without #).
+		"""
+		import string
+		self.hex = (string.zfill(str(hex(self.R)[2:]), 2) + string.zfill(str(hex(self.G)[2:]), 2) + string.zfill(str(hex(self.B)[2:]), 2)).upper()
+
+
+# Conversion from http://stackoverflow.com/questions/14088375/how-can-i-convert-rgb-to-cmyk-and-vice-versa-in-python 
+cmyk_scale = 100
+def rgb_to_cmyk(r,g,b):
+	if (r == 0) and (g == 0) and (b == 0):
+		# black
+		return 0, 0, 0, cmyk_scale
+
+	# rgb [0,255] -> cmy [0,1]
+	c = 1 - r / 255.
+	m = 1 - g / 255.
+	y = 1 - b / 255.
+
+	# extract out k [0,1]
+	min_cmy = min(c, m, y)
+	c = (c - min_cmy) / (1 - min_cmy)
+	m = (m - min_cmy) / (1 - min_cmy)
+	y = (y - min_cmy) / (1 - min_cmy)
+	k = min_cmy
+
+	# rescale to the range [0,cmyk_scale]
+	return c*cmyk_scale, m*cmyk_scale, y*cmyk_scale, k*cmyk_scale
+
+
 def InterpolateHexColorList(colors, p):
 	u"""\
 	Interpolate between list of hex RRGGBB values at float position p (0-1)
@@ -128,3 +239,4 @@ def Multiply255(color):
 	Convert float (R, G, B) tuple to 0-255 (R, G, B) tuple.
 	"""
 	return (int(color[0] * 255), int(color[1] * 255), int(color[2] * 255))
+
