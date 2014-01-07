@@ -34,6 +34,8 @@ class Color(object):
 	def lighten(self, value):
 		u"""\
 		Lighten by float 0..1
+		Returns an object in place.
+		c = Color(hex='123456').lighten(.2)
 		"""
 		value = float(value)
 		if self.type == 'RGB':
@@ -46,6 +48,8 @@ class Color(object):
 	def darken(self, value):
 		u"""\
 		Darken by float 0..1
+		Returns an object in place.
+		c = Color(hex='123456').darken(.2)
 		"""
 		value = float(value)
 		if self.type == 'RGB':
@@ -58,6 +62,8 @@ class Color(object):
 	def desaturate(self, value):
 		u"""\
 		Desaturate by float 0..1
+		Returns an object in place.
+		c = Color(hex='123456').desaturate(.2)
 		"""
 		value = float(value)
 		if self.type == 'RGB':
