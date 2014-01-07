@@ -31,7 +31,7 @@ class Color(object):
 		
 		self.A = A
 
-	def lighten(self, value):
+	def lighter(self, value):
 		u"""\
 		Lighten by float 0..1
 		Returns an object in place.
@@ -45,7 +45,7 @@ class Color(object):
 			other = self.min
 			return Color(CMYK=(Interpolate(self.C, other, value), Interpolate(self.M, other, value), Interpolate(self.Y, other, value), Interpolate(self.K, other, value)))
 	
-	def darken(self, value):
+	def darker(self, value):
 		u"""\
 		Darken by float 0..1
 		Returns an object in place.
