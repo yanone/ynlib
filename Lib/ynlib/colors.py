@@ -31,13 +31,12 @@ class Color(object):
 		
 		self.A = A
 
-	def lighter(self, value):
+	def lighten(self, value):
 		u"""\
 		Lighten by float 0..1
 		Returns an object in place.
 		c = Color(hex='123456').lighten(.2)
 		"""
-		value = float(value)
 		if self.type == 'RGB':
 			other = self.max
 			return Color(RGB=(Interpolate(self.R, other, value), Interpolate(self.G, other, value), Interpolate(self.B, other, value)))
@@ -45,13 +44,12 @@ class Color(object):
 			other = self.min
 			return Color(CMYK=(Interpolate(self.C, other, value), Interpolate(self.M, other, value), Interpolate(self.Y, other, value), Interpolate(self.K, other, value)))
 	
-	def darker(self, value):
+	def darken(self, value):
 		u"""\
 		Darken by float 0..1
 		Returns an object in place.
 		c = Color(hex='123456').darken(.2)
 		"""
-		value = float(value)
 		if self.type == 'RGB':
 			other = self.min
 			return Color(RGB=(Interpolate(self.R, other, value), Interpolate(self.G, other, value), Interpolate(self.B, other, value)))
@@ -65,7 +63,6 @@ class Color(object):
 		Returns an object in place.
 		c = Color(hex='123456').desaturate(.2)
 		"""
-		value = float(value)
 		if self.type == 'RGB':
 			other = (self.R + self.G + self.B) / 3 # Average
 			return Color(RGB=(Interpolate(self.R, other, value), Interpolate(self.G, other, value), Interpolate(self.B, other, value)))
@@ -73,11 +70,11 @@ class Color(object):
 			other = (self.C + self.M + self.Y) / 3 # Average
 			return Color(CMYK=(Interpolate(self.C, other, value), Interpolate(self.M, other, value), Interpolate(self.Y, other, value), self.K))
 
-	def __repr__(self):
-		if self.type == 'RGB':
-			return "<yn RGB Color %s %s %s>" % (self.R, self.G, self.B)
-		else:
-			return "<yn CMYK Color %s %s %s %s>" % (self.C, self.M, self.Y, self.K)
+#	def __repr__(self):
+#		if self.type == 'RGB':
+#			return "<yn RGB Color %s %s %s>" % (self.R, self.G, self.B)
+#		else:
+#			return "<yn CMYK Color %s %s %s %s>" % (self.C, self.M, self.Y, self.K)
 
 	def calcRGB(self):
 		self.R = int(self.hex[0:2], 16)
