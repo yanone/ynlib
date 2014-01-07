@@ -75,9 +75,9 @@ class Color(object):
 
 	def __repr__(self):
 		if self.type == 'RGB':
-			return "<yn %s Color %s %s %s>" % (self.type, self.R, self.G, self.B)
+			return "<yn RGB Color %s %s %s>" % (self.R, self.G, self.B)
 		else:
-			return "<yn %s Color %s %s %s %s>" % (self.type, self.C, self.M, self.Y, self.K)
+			return "<yn CMYK Color %s %s %s %s>" % (self.C, self.M, self.Y, self.K)
 
 	def calcRGB(self):
 		self.R = int(self.hex[0:2], 16)
