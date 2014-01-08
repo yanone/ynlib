@@ -11,21 +11,21 @@ class Color(object):
 	def __init__(self, hex=None, CMYK=None, RGB=None, A = 1.0):
 		
 		if hex:
-			self.min = 0
-			self.max = 255
+			self.min = 0.0
+			self.max = 255.0
 			self.hex = hex
 			self.calcRGB()
 			#self.C, self.M, self.Y, self.K = rgb_to_cmyk(self.R, self.G, self.B)
 			self.type = 'RGB'
 		elif RGB:
-			self.min = 0
-			self.max = 255
+			self.min = 0.0
+			self.max = 255.0
 			self.R, self.G, self.B = map(int, RGB)
 			self.calcHex()
 			self.type = 'RGB'
 		elif CMYK:
-			self.min = 0
-			self.max = 100
+			self.min = 0.0
+			self.max = 100.0
 			self.C, self.M, self.Y, self.K = map(int, CMYK)
 			self.type = 'CMYK'
 		
