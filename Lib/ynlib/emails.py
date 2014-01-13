@@ -46,8 +46,8 @@ class Email(object):
 		msg = MIMEText(self.body)
 		msg['Subject'] = self.subject
 		msg['From'] = self.sender
-		msg['To'] = ','.join(recipients)
+		msg['To'] = ','.join(self.recipients)
 
 		s = smtplib.SMTP('localhost')
-		s.sendmail(sender, recipients, msg.as_string())
+		s.sendmail(self.sender, self.recipients, msg.as_string())
 		s.quit()
