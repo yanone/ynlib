@@ -29,6 +29,8 @@ class Email(object):
 
 	def __init__(self):
 		self.recipients = []
+		self.CC = []
+		self.BCC = []
 		self.sender = ''
 		self.sendername = ''
 		self.subject = ''
@@ -38,16 +40,41 @@ class Email(object):
 	def send(self):
 		
 		# Import smtplib for the actual sending function
-		import smtplib
+		import smtplib, os
+		from email.MIMEMultipart import MIMEMultipart
+		from email.MIMEBase import MIMEBase
+		from email.MIMEText import MIMEText
+		from email.Utils import COMMASPACE, formatdate
+		from email import Encoders
 
 		# Import the email modules we'll need
+		from email.mime.multipart import MIMEMultipart
 		from email.mime.text import MIMEText
 		
-		msg = MIMEText(self.body)
+		msg = MIMEMultipart()
 		msg['Subject'] = self.subject
 		msg['From'] = self.sender
 		msg['To'] = ','.join(self.recipients)
-
+		if self.CC:
+			msg['Cc'] = ','.join(self.CC)
+		msg.attach(MIMEText(self.body))
+		
+		for f in self.attachments:
+			part = MIMEBase('application', "octet-stream")
+			part.set_payload(open(f,"rb").read())
+			Encoders.encode_base64(part)
+			part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f))
+			msg.attach(part)
+		
 		s = smtplib.SMTP('localhost')
-		s.sendmail(self.sender, self.recipients, msg.as_string())
+		
+		from sets import Set
+		recipients = Set(self.recipients)
+		recipients.update(self.CC)
+		recipients.update(self.BCC)
+		
+		s.sendmail(self.sender, list(recipients), msg.as_string())
 		s.quit()
+
+	def attachFile(self, file):
+		self.attachments.append(file)
