@@ -91,7 +91,7 @@ def NaturalWeedkayTimeAndDate(timestamp, locale = 'en'):
 	elif locale == 'de':
 		return time.strftime(datelocale[locale][time.strftime("%a", time.localtime(timestamp))] + ", " + day + ". " + datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + " %Y um %H:%M Uhr", time.localtime(timestamp))
 
-def NaturalRelativeWeedkayTimeAndDate(timestamp, locale = 'en'):
+def NaturalRelativeWeedkayTimeAndDate(timestamp, locale = 'en', relativeDays = 1):
 	u"""\
 	Return date and time relative to current moment as:
 	- x seconds ago
@@ -129,6 +129,14 @@ def NaturalRelativeWeedkayTimeAndDate(timestamp, locale = 'en'):
 		else:
 			answer['en'] = "%s hours ago" % (hours)
 			answer['de'] = "vor %s Stunden" % (hours)
+	elif (60 * 60 * 24 * 1) < timepassed < (60 * 60 * 24 * relativeDays): # 22 hours ago
+		days = int(timepassed // (60 * 60 * 24))
+		if days == 1:
+			answer['en'] = "1 day ago"
+			answer['de'] = "vor 1 Tag"
+		else:
+			answer['en'] = "%s days ago" % (days)
+			answer['de'] = "vor %s Tagen" % (days)
 
 	if answer.has_key(locale):
 		return answer[locale]
