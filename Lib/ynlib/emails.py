@@ -61,9 +61,12 @@ class Email(object):
 		
 		for f in self.attachments:
 			part = MIMEBase('application', "octet-stream")
-			part.set_payload(open(f,"rb").read())
+			part.set_payload(open(f.path, "rb").read())
 			Encoders.encode_base64(part)
-			part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f))
+			if f.filename:
+				part.add_header('Content-Disposition', 'attachment; filename="%s"' % f.filename)
+			else:
+				part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f))
 			msg.attach(part)
 		
 		s = smtplib.SMTP('localhost')
@@ -76,5 +79,13 @@ class Email(object):
 		s.sendmail(self.sender, list(recipients), msg.as_string())
 		s.quit()
 
-	def attachFile(self, file):
-		self.attachments.append(file)
+	def attachFile(self, path, filename = None):
+		self.attachments.append(EmailAttachment(path, filename))
+
+class EmailAttachment(object):
+	def __init__(self, path, filename = None):
+		self.path = path
+		self.filename = filename
+	
+	
+	#%s %s' % (buy.localized('invoice'), os.path.basename(order.invoicePDFpath()))
