@@ -89,7 +89,16 @@ def NaturalWeedkayTimeAndDate(timestamp, locale = 'en'):
 	if locale == 'en':
 		return time.strftime("%A, %B " + day + ordinal + ", %Y at %H:%M", time.localtime(timestamp))
 	elif locale == 'de':
-		return time.strftime(datelocale[locale][time.strftime("%a", time.localtime(timestamp))] + ", " + day + ". " + datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + " %Y um %H:%M Uhr", time.localtime(timestamp))
+		s = ''
+		s += unicode(datelocale[locale][time.strftime("%a", time.localtime(timestamp))]) 
+		s += u", "
+		s += unicode(day)
+		s += u". "
+		s += unicode(datelocale[locale][time.strftime("%b", time.localtime(timestamp))])
+		s += unicode(time.strftime(u" %Y um %H:%M Uhr", time.localtime(timestamp)))
+		
+		return s
+#		day + u". " + datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + u" %Y um %H:%M Uhr", time.localtime(timestamp)
 
 def MonthAndYear(timestamp, locale = 'en'):
 	u"""\
