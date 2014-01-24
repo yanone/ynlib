@@ -66,7 +66,7 @@ class Email(object):
 			if f.filename:
 				part.add_header('Content-Disposition', 'attachment; filename="%s"' % f.filename)
 			else:
-				part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f))
+				part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f.path))
 			msg.attach(part)
 		
 		s = smtplib.SMTP('localhost')
