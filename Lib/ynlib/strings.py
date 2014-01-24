@@ -91,6 +91,19 @@ def NaturalWeedkayTimeAndDate(timestamp, locale = 'en'):
 	elif locale == 'de':
 		return time.strftime(datelocale[locale][time.strftime("%a", time.localtime(timestamp))] + ", " + day + ". " + datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + " %Y um %H:%M Uhr", time.localtime(timestamp))
 
+def MonthAndYear(timestamp, locale = 'en'):
+	u"""\
+	Return date:
+	May 2012
+	"""
+	import time
+	from calendars import datelocale
+
+	if locale == 'en':
+		return time.strftime("%B %Y", time.localtime(timestamp))
+	elif locale == 'de':
+		return datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + ' ' + time.strftime("%Y", time.localtime(timestamp))
+
 def NaturalRelativeWeedkayTimeAndDate(timestamp, locale = 'en', relativeDays = 1):
 	u"""\
 	Return date and time relative to current moment as:
