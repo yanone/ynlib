@@ -60,14 +60,15 @@ class Email(object):
 		msg.attach(MIMEText(self.body))
 		
 		for f in self.attachments:
-			part = MIMEBase('application', "octet-stream")
-			part.set_payload(open(f.path, "rb").read())
-			Encoders.encode_base64(part)
-			if f.filename:
-				part.add_header('Content-Disposition', 'attachment; filename="%s"' % f.filename)
-			else:
-				part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f.path))
-			msg.attach(part)
+			if os.path.exists(f.path):
+				part = MIMEBase('application', "octet-stream")
+				part.set_payload(open(f.path, "rb").read())
+				Encoders.encode_base64(part)
+				if f.filename:
+					part.add_header('Content-Disposition', 'attachment; filename="%s"' % f.filename)
+				else:
+					part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f.path))
+				msg.attach(part)
 		
 		s = smtplib.SMTP('localhost')
 		
