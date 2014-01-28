@@ -154,8 +154,11 @@ def NaturalRelativeWeedkayTimeAndDate(timestamp, locale = 'en', relativeDays = 1
 	elif (60 * 60 * 24 * 1) < timepassed < (60 * 60 * 24 * relativeDays): # 22 hours ago
 		days = int(timepassed // (60 * 60 * 24))
 		if days == 1:
-			answer['en'] = "1 day ago"
-			answer['de'] = "vor 1 Tag"
+			answer['en'] = "yesterday"
+			answer['de'] = "gestern"
+		elif days == 1:
+			answer['en'] = "2 days ago"
+			answer['de'] = "vorgestern"
 		else:
 			answer['en'] = "%s days ago" % (days)
 			answer['de'] = "vor %s Tagen" % (days)
