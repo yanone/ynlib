@@ -52,12 +52,17 @@ class Email(object):
 		from email.mime.text import MIMEText
 		
 		msg = MIMEMultipart()
+		
+		msg['MIME-Version']="1.0"
+		msg['Content-Type'] = "text/plain;charset=utf-8"
+		msg['Content-Transfer-Encoding'] = "quoted-printable"
+
 		msg['Subject'] = self.subject
 		msg['From'] = self.sender
 		msg['To'] = ','.join(self.recipients)
 		if self.CC:
 			msg['Cc'] = ','.join(self.CC)
-		msg.attach(MIMEText(self.body))
+		msg.attach(MIMEText(self.body, 'plain', 'utf-8'))
 		
 		for f in self.attachments:
 			if os.path.exists(f.path):
