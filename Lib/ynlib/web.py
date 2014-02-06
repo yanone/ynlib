@@ -1,13 +1,27 @@
-def GetHTTP(url, timeout = 5):
-	u"""GET HTTP responses from the net. Returns False if attempt failed."""
+def GetHTTP(url, timeout = 5, authentication = None):
+	u"""\
+	GET HTTP responses from the net. Returns False if attempt failed.
+	Authentication as "username:password"
+	"""
 
 
-	import urllib2
-	request = urllib2.urlopen(url, timeout = timeout)
+	import urllib2, base64
+
+
+	request = urllib2.Request(url)
+	if authentication:
+		base64string = base64.encodestring(authentication)
+		request.add_header("Authorization", "Basic %s" % base64string)   
+	result = urllib2.urlopen(request)
+
+
+
+
+#	result = urllib2.urlopen(url, timeout = timeout)
 #	request = urllib2.urlopen(url)
-	if request.getcode() == 200:
-		encoding = request.headers['content-type'].split('charset=')[-1]
-		content = request.read()
+	if result.getcode() == 200:
+		encoding = result.headers['content-type'].split('charset=')[-1]
+		content = result.read()
 		#print encoding
 		try:
 			content = unicode(content, encoding)
@@ -19,15 +33,20 @@ def GetHTTP(url, timeout = 5):
 #	except:
 #		return False
 
-def PostHTTP(url, values):
-	u"""POST HTTP responses from the net. Values are dictionary {argument: value}"""
+def PostHTTP(url, values, authentication = None):
+	u"""\
+	POST HTTP responses from the net. Values are dictionary {argument: value}
+	Authentication as "username:password"
+	"""
 
-	import urllib
-	import urllib2
+	import urllib, urllib2, base64
 
 	data = urllib.urlencode(values)
-	req = urllib2.Request(url, data)
-	response = urllib2.urlopen(req)
+	request = urllib2.Request(url, data)
+	if authentication:
+		base64string = base64.encodestring(authentication)
+		request.add_header("Authorization", "Basic %s" % base64string)   
+	response = urllib2.urlopen(request)
 	return response.read()
 
 
