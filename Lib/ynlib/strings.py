@@ -65,7 +65,7 @@ def FormattedDate(timestamp, locale = 'en'):
 	if locale == 'en':
 		return time.strftime("%B " + day + ordinal + ", %Y", time.localtime(timestamp))
 	elif locale == 'de':
-		return time.strftime(day + ". " + datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + " %Y", time.localtime(timestamp))
+		return unicode(day) + u". " + datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + u' ' + time.strftime("%Y", time.localtime(timestamp))
 
 
 def NaturalWeedkayTimeAndDate(timestamp, locale = 'en'):

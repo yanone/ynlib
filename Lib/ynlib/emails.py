@@ -79,11 +79,13 @@ class Email(object):
 		
 		from sets import Set
 		recipients = Set(self.recipients)
-		recipients.update(self.CC)
-		recipients.update(self.BCC)
+		recipients.update(Set(self.CC))
+		recipients.update(Set(self.BCC))
 		
 		s.sendmail(self.sender, list(recipients), msg.as_string())
 		s.quit()
+		
+		return list(recipients)
 
 	def attachFile(self, path, filename = None):
 		self.attachments.append(EmailAttachment(path, filename))

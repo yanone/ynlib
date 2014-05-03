@@ -33,16 +33,22 @@ def GetHTTP(url, timeout = 5, authentication = None):
 #	except:
 #		return False
 
-def PostHTTP(url, values, authentication = None):
+def PostHTTP(url, values = [], data = None, authentication = None, contentType = None):
 	u"""\
 	POST HTTP responses from the net. Values are dictionary {argument: value}
 	Authentication as "username:password"
 	"""
 
 	import urllib, urllib2, base64
-
-	data = urllib.urlencode(values)
+	
+	if values:
+		data = urllib.urlencode(values)
+		
 	request = urllib2.Request(url, data)
+
+	if contentType:
+		request.add_header("Content-Type", contentType)  
+
 	if authentication:
 		base64string = base64.encodestring(authentication)
 		request.add_header("Authorization", "Basic %s" % base64string)   
