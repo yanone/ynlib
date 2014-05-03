@@ -20,16 +20,17 @@ class Font(object):
 		self.glyphs = []
 		for table in self.TTFont["cmap"].tables:
 			for cmapEntry in table.cmap.items():
-				self.addGlyph(cmapEntry[1], cmapEntry[0])
+				self._addGlyph(cmapEntry[1], cmapEntry[0])
 
-	def addGlyph(self, name, _unicode):
+	def _addGlyph(self, name, _unicode):
 		if not name in self.glyphNames:
 			self.glyphs.append(Glyph(self, name, _unicode))
 			self.glyphNames.append(name)
 
-# Test
+	def unicodes(self):
+		_unicodes = []
+		for g in self.glyphs:
+			if g.unicode:
+				_unicodes.append(g.unicode)
+		return _unicodes
 
-f = Font('/Users/yanone/Projekte/Webtype/02 - Eagle/TTF/Eagle-Light.ttf')
-for g in f.glyphs:
-	if g.unicode>10:
-		print "&#%s;" % g.unicode
