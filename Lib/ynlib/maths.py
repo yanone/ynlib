@@ -11,7 +11,6 @@ def Interpolate(a, b, p, limit = False):
 	else:
 		return i
 
-
 def Distance(p1, p2):
 	u"""\
 	Return distance between two points definded as (x, y).
