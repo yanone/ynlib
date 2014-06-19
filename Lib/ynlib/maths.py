@@ -1,8 +1,15 @@
-def Interpolate(a, b, p):
+def Interpolate(a, b, p, limit = False):
 	u"""\
 	Interpolate between values a and b at float position p (0-1)
+	Limit: No extrapolation
 	"""
-	return a + (b - a) * p
+	i = a + (b - a) * p
+	if limit and i < a:
+		return a
+	elif limit and i > b:
+		return b
+	else:
+		return i
 
 
 def Distance(p1, p2):
