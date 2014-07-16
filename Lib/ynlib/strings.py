@@ -268,3 +268,24 @@ def Garbage(length, uppercase = True, lowercase = True, numbers = True, punctuat
 	
 	return garbage
 		
+
+
+def formatPrice(price = 0, currencySymbol = None, numberSeparator = ','):
+	
+	thousandSeparator = [',', '.']
+	thousandSeparator.remove(numberSeparator)
+	
+	parts = str(float(price)).split('.')
+	for i in range(len(parts[1]), 2):
+		parts[1] += '0'
+	
+	part0 = []
+	for i in range(1, len(parts[0])+1, 3):
+		part0.append(parts[0][max(len(parts[0]) - i - 2, 0) : len(parts[0]) - i + 1])
+	part0.reverse()
+	
+	if currencySymbol:
+		return thousandSeparator[0].join(part0) + numberSeparator + parts[1] + self.currencySymbol
+	else:
+		return thousandSeparator[0].join(part0) + numberSeparator + parts[1]
+
