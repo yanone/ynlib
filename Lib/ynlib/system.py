@@ -40,3 +40,39 @@ def MD5OfFile(filename):
 		for chunk in iter(lambda: f.read(128*md5.block_size), b''): 
 			 md5.update(chunk)
 	return md5.hexdigest()
+
+
+
+
+
+import os
+import sys    
+import termios
+import fcntl
+import time
+
+def GetChr():
+	u"""\
+	Wait for single keyboard press and return character
+	"""
+	fd = sys.stdin.fileno()
+
+	oldterm = termios.tcgetattr(fd)
+	newattr = termios.tcgetattr(fd)
+	newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+	termios.tcsetattr(fd, termios.TCSANOW, newattr)
+
+	oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
+	fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+
+	try:
+		while 1:
+			try:
+				c = sys.stdin.read(1)
+				break
+			except IOError: pass
+			time.sleep(.1)
+	finally:
+		termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
+		fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
+	return c
