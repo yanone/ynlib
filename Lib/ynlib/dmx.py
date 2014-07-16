@@ -66,7 +66,7 @@ class DMX(object):
 	def setValue(self, channel, intensity):
 		# because the spacer bit is [0], the channel number is the array item number
 		# set the channel number to the proper value
-		self.dmxdata[channel]=chr(intensity)
+		self.dmxdata[channel]=chr(int(intensity))
 		
 	def send(self):
 		# join turns the array data into a string we can send down the DMX
