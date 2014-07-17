@@ -285,7 +285,7 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = ','):
 	part0.reverse()
 	
 	if currencySymbol:
-		return thousandSeparator[0].join(part0) + numberSeparator + parts[1] + self.currencySymbol
+		return thousandSeparator[0].join(part0) + numberSeparator + parts[1][:2] + self.currencySymbol
 	else:
-		return thousandSeparator[0].join(part0) + numberSeparator + parts[1]
+		return thousandSeparator[0].join(part0) + numberSeparator + parts[1][:2]
 
