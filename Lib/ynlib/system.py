@@ -51,10 +51,13 @@ import termios
 import fcntl
 import time
 
-def GetChr():
+def GetChr(waitMaximalSeconds = None):
 	u"""\
 	Wait for single keyboard press and return character
 	"""
+
+	firstCallTime = time.time()
+
 	fd = sys.stdin.fileno()
 
 	oldterm = termios.tcgetattr(fd)
@@ -72,6 +75,12 @@ def GetChr():
 				break
 			except IOError: pass
 			time.sleep(.1)
+			
+			# Return if waitMaximalSeconds is reached:
+			if waitMaximalSeconds > 0:
+				if time.time() > firstCallTime + waitMaximalSeconds:
+					return None
+			
 	finally:
 		termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
 		fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
