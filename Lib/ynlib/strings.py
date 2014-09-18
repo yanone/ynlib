@@ -11,6 +11,7 @@ def ReadableFileSize(num):
 		num /= 1024.0
 	return "%3.1f%s" % (num, 'TB')
 
+
 def AutoLinkString(string):
 	u"""\
 	Autlink text with <a> tags to various destinations, such as:
@@ -19,8 +20,10 @@ def AutoLinkString(string):
 	"""
 	import re
 
+	# email
+	string = re.sub("(([a-zA-Z0-9._\-]+)@([a-zA-Z0-9\.\_\-]+))", "<a href=\"mailto:\\1\">\\1</a>", string)
 	# http
-	string = re.sub("((http://|https://|www\.)([a-zA-Z0-9._\/-?=&]+))", "<a target=\"_blank\" href=\"\\1\">\\1</a>", string)
+	string = re.sub("((http://|https://|www\.)([a-zA-Z0-9\.\_\/\-\?\=\&]+))", "<a target=\"_blank\" href=\"http://\\1\">\\1</a>", string)
 	# Twitter @
 	string = re.sub("@([a-zA-Z0-9_]+)", "@<a target=\"_blank\" href=\"http://twitter.com/\\1\">\\1</a>", string)
 	# Twitter #
