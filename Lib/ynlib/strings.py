@@ -116,7 +116,7 @@ def MonthAndYear(timestamp, locale = 'en'):
 	elif locale == 'de':
 		return datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + ' ' + time.strftime("%Y", time.localtime(timestamp))
 
-def NaturalRelativeWeedkayTimeAndDate(timestamp, locale = 'en', relativeDays = 1):
+def NaturalRelativeWeedkayTimeAndDate(timestamp, locale = 'en', relativeDays = 14):
 	u"""\
 	Return date and time relative to current moment as:
 	- x seconds ago
@@ -170,6 +170,61 @@ def NaturalRelativeWeedkayTimeAndDate(timestamp, locale = 'en', relativeDays = 1
 		return answer[locale]
 	else:
 		return NaturalWeedkayTimeAndDate(timestamp, locale)
+
+def NaturalRelativeWeedkayDate(timestamp, locale = 'en', relativeDays = 14):
+	u"""\
+	Return date and time relative to current moment as:
+	- x seconds ago
+	- x minutes ago
+	- x hours ago
+	- Wednesday, October 20th, 2010 at 14:12
+	"""
+	import time
+	answer = {}
+	
+	now = time.time()
+	timepassed = now - timestamp
+	
+	if timepassed < 60: # less than 1 minute
+		seconds = int(timepassed)
+		if seconds == 1:
+			answer['en'] = "1 second ago"
+			answer['de'] = "vor 1 Sekunde"
+		else:
+			answer['en'] = "%s seconds ago" % (seconds)
+			answer['de'] = "vor %s Sekunden" % (seconds)
+	elif 60 < timepassed < (60 * 60): # 22 minutes ago
+		minutes = int(timepassed // 60)
+		if minutes == 1:
+			answer['en'] = "1 minute ago"
+			answer['de'] = "vor 1 Minute"
+		else:
+			answer['en'] = "%s minutes ago" % (minutes)
+			answer['de'] = "vor %s Minuten" % (minutes)
+	elif (60 * 60) < timepassed < (60 * 60 * 24 * 1): # 22 hours ago
+		hours = int(timepassed // (60 * 60))
+		if hours == 1:
+			answer['en'] = "1 hour ago"
+			answer['de'] = "vor 1 Stunde"
+		else:
+			answer['en'] = "%s hours ago" % (hours)
+			answer['de'] = "vor %s Stunden" % (hours)
+	elif (60 * 60 * 24 * 1) < timepassed < (60 * 60 * 24 * relativeDays): # 22 hours ago
+		days = int(timepassed // (60 * 60 * 24))
+		if days == 1:
+			answer['en'] = "yesterday"
+			answer['de'] = "gestern"
+		elif days == 1:
+			answer['en'] = "2 days ago"
+			answer['de'] = "vorgestern"
+		else:
+			answer['en'] = "%s days ago" % (days)
+			answer['de'] = "vor %s Tagen" % (days)
+
+	if answer.has_key(locale):
+		return answer[locale]
+	else:
+		return FormattedDate(timestamp, locale)
 
 
 def NaturalAmountOfTime(seconds, locale = 'en'):
