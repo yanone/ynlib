@@ -39,3 +39,13 @@ def InterpolateImageFGColorOnTop(bg, fg, fgcolor):
 				newpix[x, y] = tuple(pixel)
 	
 	return new
+
+
+def imageFileDimensions(path):
+
+	from ynlib.system import Execute
+	import re
+	
+	identify = Execute('identify -ping "%s"' % path)
+	m = re.match(r".*?(\d+)x(\d+).*?", identify)
+	return (int(m.group(1)), int(m.group(2)))
