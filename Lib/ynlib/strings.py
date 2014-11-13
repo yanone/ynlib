@@ -347,3 +347,13 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = ','):
 	else:
 		return thousandSeparator[0].join(part0) + numberSeparator + parts[1][:2]
 
+
+def GenitiveS(name, locale = 'en'):
+	u"""\
+	Apply genitive s rules.
+	"""
+
+	if locale == 'de':
+		return '’' if name.endswith('s') else 's'
+	else:
+		return '’' if name.endswith('s') else '’s'
