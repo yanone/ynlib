@@ -22,14 +22,52 @@ def AutoLinkString(string):
 
 	# email
 	string = re.sub("(([a-zA-Z0-9._\-]+)@([a-zA-Z0-9\.\_\-]+))", "<a href=\"mailto:\\1\">\\1</a>", string)
-	# http
-	string = re.sub("((http://|https://|www\.)([a-zA-Z0-9\.\_\/\-\?\=\&]+))", "<a target=\"_blank\" href=\"http://\\1\">\\1</a>", string)
-	# Twitter @
-	string = re.sub("@([a-zA-Z0-9_]+)", "@<a target=\"_blank\" href=\"http://twitter.com/\\1\">\\1</a>", string)
-	# Twitter #
-	string = re.sub("#([a-zA-Z0-9._\-]+)", "#<a target=\"_blank\" href=\"http://twitter.com/#search?q=%23\\1\">\\1</a>", string)
-	return string
 
+	# http
+	def repl(r):
+		output = []
+		output.append('<a href="')
+
+		http = r.group(1) or 'http://'
+		if not http.startswith('http'):
+			http  = 'http://' + http
+
+		# remove punctuation at the end
+		group2 = r.group(2)
+		for s in ['.']:
+			group2 = group2.split(s)
+			if group2[-1] == '':
+				punctuation = s
+				group2 = s.join(group2[:-1])
+			else:
+				punctuation = ''
+				group2 = s.join(group2)
+			
+		
+		if '/' in group2:
+
+			domain = group2.split('/')[0]
+			path = group2.split('/')[1:]
+		
+		else:
+			domain = group2
+			path = ''
+
+		shortDomain = domain.split('.')[-2] + '.' + domain.split('.')[-1]
+		URL = http + domain + '/' + '/'.join(path)
+		
+		output.append(URL)
+	
+		output.append('">')
+		output.append(shortDomain)
+		output.append('</a>')
+		output.append(punctuation)
+	
+		return ''.join(output)
+
+	string = re.sub(r"\b(http://|https://|www\.)([a-zA-Z0-9\-\.\/]+)?", repl, string)
+
+	return string
 
 
 
