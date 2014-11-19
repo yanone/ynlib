@@ -21,7 +21,7 @@ def AutoLinkString(string):
 	import re
 
 	# email
-	string = re.sub("(([a-zA-Z0-9._\-]+)@([a-zA-Z0-9\.\_\-]+))", "<a href=\"mailto:\\1\">\\1</a>", string)
+	string = re.sub("(([a-zA-Z0-9._\-]+)@([a-zA-Z0-9\._-]+))", "<a href=\"mailto:\\1\">\\1</a>", string)
 
 	# http
 	def repl(r):
@@ -65,7 +65,7 @@ def AutoLinkString(string):
 	
 		return ''.join(output)
 
-	string = re.sub(r"\b(http://|https://|www\.)([a-zA-Z0-9\-\.\/]+)?", repl, string)
+	string = re.sub(r"\b(http://|https://|www\.)([a-zA-Z0-9-\.\/]+)?", repl, string)
 
 	return string
 
