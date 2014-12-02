@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
 
 
+def SimpleTextWrap(text, characters):
+	import textwrap
+	w = textwrap.TextWrapper()
+	w.width = characters
+	
+	lines = text.split("\n")
+	lists = (w.wrap(line) for line in lines)
+	body  = "\n".join("\n".join(list) for list in lists)
+	return body
+
+
 def ReadableFileSize(num):
 	u"""\
 	Makes human readable file size of integer bytes.
