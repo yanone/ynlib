@@ -1,6 +1,39 @@
 # -*- coding: utf-8 -*-
 
 
+def smartString(s, encoding='utf-8', errors='strict', from_encoding='utf-8'):
+	u"""\
+	Convert all incoming string to Unicode.
+	"""
+	import types
+	if type(s) in (int, long, float, types.NoneType):
+		return str(s)
+	elif type(s) is str:
+		if encoding != from_encoding:
+			return s.decode(from_encoding, errors).encode(encoding, errors)
+		else:
+			return s
+	elif type(s) is unicode:
+		return s.encode(encoding, errors)
+	elif hasattr(s, '__str__'):
+		return self.smartString(str(s), encoding, errors, from_encoding)
+	elif hasattr(s, '__unicode__'):
+		return self.smartString(unicode(s), encoding, errors, from_encoding)
+	else:
+		return self.smartString(str(s), encoding, errors, from_encoding)
+
+
+def feet(height_cms):
+	u"""\
+	Convert cm to feet and inches.
+	"""
+	inches = height_cms / 2.54 
+	feet = inches / 12 
+	remainder_inches = inches % 12 
+
+	return "%d′%d″" % (feet, remainder_inches)
+
+
 def SimpleTextWrap(text, characters):
 	import textwrap
 	w = textwrap.TextWrapper()
