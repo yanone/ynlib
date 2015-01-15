@@ -32,22 +32,23 @@ class EUInvoicing(object):
 	def taxPercent(self, country):
 		return int(self.EUwithVATdict[country]) / 100.0
 
+def test():
 
-EUwithVATdict = {
-	'DE': 19,
-	'FR': 20,
-	'CZ': 21,
-	}
+	EUwithVATdict = {
+		'DE': 19,
+		'FR': 20,
+		'CZ': 21,
+		}
 
-i = EUInvoicing(
-	homeCountry = 'DE',
-	EUwithVATdict = EUwithVATdict,
-	clientCountry = 'US',
-	clientVATID = None,
-	netto = 100.0
-	)
+	i = EUInvoicing(
+		homeCountry = 'DE',
+		EUwithVATdict = EUwithVATdict,
+		clientCountry = 'US',
+		clientVATID = None,
+		netto = 100.0
+		)
 
-print i.netto
-print i.tax
-print i.brutto
-print i.reverseCharge
+	print i.netto
+	print i.tax
+	print i.brutto
+	print i.reverseCharge
