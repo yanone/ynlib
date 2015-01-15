@@ -415,6 +415,11 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = ','):
 	thousandSeparator = [',', '.']
 	thousandSeparator.remove(numberSeparator)
 	
+	price *= 100
+	price = round(price)
+	price /= 100.0
+
+
 	parts = str(float(price)).split('.')
 	for i in range(len(parts[1]), 2):
 		parts[1] += '0'
@@ -425,7 +430,7 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = ','):
 	part0.reverse()
 	
 	if currencySymbol:
-		return thousandSeparator[0].join(part0) + numberSeparator + parts[1][:2] + self.currencySymbol
+		return thousandSeparator[0].join(part0) + numberSeparator + parts[1][:2] + currencySymbol
 	else:
 		return thousandSeparator[0].join(part0) + numberSeparator + parts[1][:2]
 
