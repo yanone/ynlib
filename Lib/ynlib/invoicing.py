@@ -9,15 +9,18 @@ class EUInvoicing(object):
 		self.tax = 0
 		self.brutto = netto
 		self.reverseCharge = False
+		self.taxPercentage = 0
 		
 		# DE
 		if self.clientCountry == self.homeCountry:
 			self.tax = self.netto * self.taxPercent(self.clientCountry)
 			self.brutto = self.netto + self.tax
+			self.taxPercentage = self.EUwithVATdict[self.clientCountry]
 
 		# EU, private
 		elif self.clientCountry in self.EUwithVATdict.keys() and not self.clientVATID:
 			self.reverseCharge = True
+			self.taxPercentage = self.EUwithVATdict[self.clientCountry]
 
 		# EU, company
 		elif self.clientCountry in self.EUwithVATdict.keys() and self.clientVATID:
@@ -27,7 +30,6 @@ class EUInvoicing(object):
 		# Outside EU
 		else:
 			pass
-		
 
 	def taxPercent(self, country):
 		return int(self.EUwithVATdict[country]) / 100.0
