@@ -410,8 +410,13 @@ def Garbage(length, uppercase = True, lowercase = True, numbers = True, punctuat
 		
 
 
-def formatPrice(price = 0, currencySymbol = None, numberSeparator = ','):
+def formatPrice(price = 0, currencySymbol = None, numberSeparator = ',', locale = 'de'):
 	
+	if locale == 'de':
+		numberSeparator = ','
+	else:
+		numberSeparator = '.'
+
 	thousandSeparator = [',', '.']
 	thousandSeparator.remove(numberSeparator)
 	
