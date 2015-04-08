@@ -410,7 +410,7 @@ def Garbage(length, uppercase = True, lowercase = True, numbers = True, punctuat
 		
 
 
-def formatPrice(price = 0, currencySymbol = None, numberSeparator = ',', locale = 'de'):
+def formatPrice(price = 0, currencySymbol = None, numberSeparator = '.', locale = 'en'):
 	
 	if locale == 'de':
 		numberSeparator = ','
@@ -424,20 +424,31 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = ',', locale 
 	price = round(price)
 	price /= 100.0
 
+	string = str(float(price))
+	
+	# negative
+	negative = ''
+	if string.startswith('-'):
+		negative = '-'
+		string = string[1:]
 
-	parts = str(float(price)).split('.')
-	for i in range(len(parts[1]), 2):
-		parts[1] += '0'
+	# Fill with zeros
+	parts = string.split('.')
+	parts[1] = parts[1].ljust(2, '0')
+
 	
 	part0 = []
 	for i in range(1, len(parts[0])+1, 3):
 		part0.append(parts[0][max(len(parts[0]) - i - 2, 0) : len(parts[0]) - i + 1])
 	part0.reverse()
 	
+	string = negative + thousandSeparator[0].join(part0) + numberSeparator + parts[1][:2]
+	string = string.replace('-', '–')
+	
 	if currencySymbol:
-		return thousandSeparator[0].join(part0) + numberSeparator + parts[1][:2] + currencySymbol
-	else:
-		return thousandSeparator[0].join(part0) + numberSeparator + parts[1][:2]
+		string += currencySymbol
+
+	return string
 
 
 def GenitiveS(name, locale = 'en'):
