@@ -44,14 +44,18 @@ def PostHTTP(url, values = [], data = None, authentication = None, contentType =
 	if values:
 		data = urllib.urlencode(values)
 		
-	request = urllib2.Request(url, data)
+	headers = {}
+
 
 	if contentType:
-		request.add_header("Content-Type", contentType)  
+		headers["Content-Type"] = contentType
+		headers["Accept"] = contentType
 
 	if authentication:
 		base64string = base64.encodestring(authentication)
-		request.add_header("Authorization", "Basic %s" % base64string)   
+		headers["Authorization"] = "Basic %s" % base64string
+
+	request = urllib2.Request(url, data = data, headers = headers)
 	response = urllib2.urlopen(request)
 	return response.read()
 
