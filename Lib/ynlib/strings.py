@@ -153,7 +153,7 @@ def FormattedDate(timestamp, locale = 'en'):
 		return unicode(day) + u". " + datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + u' ' + time.strftime("%Y", time.localtime(timestamp))
 
 
-def NaturalWeedkayTimeAndDate(timestamp, locale = 'en'):
+def NaturalWeekdayTimeAndDate(timestamp, locale = 'en'):
 	u"""\
 	Return date and time as:
 	Wednesday, October 20th, 2010 at 14:12
@@ -198,7 +198,7 @@ def MonthAndYear(timestamp, locale = 'en'):
 	elif locale == 'de':
 		return datelocale[locale][time.strftime("%b", time.localtime(timestamp))] + ' ' + time.strftime("%Y", time.localtime(timestamp))
 
-def NaturalRelativeWeedkayTimeAndDate(timestamp, locale = 'en', relativeDays = 14):
+def NaturalRelativeWeekdayTimeAndDate(timestamp, locale = 'en', relativeDays = 14):
 	u"""\
 	Return date and time relative to current moment as:
 	- x seconds ago
