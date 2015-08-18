@@ -75,10 +75,8 @@ def Environment():
 	except: pass
 
 	try:
-		from AppKit import *
-		MainBundle = NSBundle.mainBundle()
-		if 'Glyphs' in MainBundle.bundlePath():
-			environment = 'GlyphsApp'
+		import GlyphsApp
+		environment = 'GlyphsApp'
 	except: pass
 
 	try:
