@@ -460,3 +460,14 @@ def GenitiveS(name, locale = 'en'):
 		return '’' if name.endswith('s') else 's'
 	else:
 		return '’' if name.endswith('s') else '’s'
+
+def MixedCase(string):
+	u"""\
+	Generate Mixed Case String
+	"""
+
+	parts = string.split(' ')
+	newParts = []
+	for i in range(len(parts)):
+		parts[i] = parts[i][0:1].upper() + parts[i][1:].lower()
+	return ' '.join(parts)
