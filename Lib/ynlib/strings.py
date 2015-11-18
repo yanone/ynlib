@@ -478,12 +478,12 @@ def HoursMinutesSeconds(seconds):
 
 	hours = seconds // 3600
 	if hours:
-		string += '%sh' % (hours)
+		string += '%sh ' % (hours)
 	seconds -= hours * 3600
 
 	minutes = seconds // 60
 	if minutes:
-		string += "%s'" % (minutes)
+		string += "%s' " % (minutes)
 	seconds -= minutes * 60
 
 	string += '%s"' % (seconds)
