@@ -471,3 +471,21 @@ def MixedCase(string):
 	for i in range(len(parts)):
 		parts[i] = parts[i][0:1].upper() + parts[i][1:].lower()
 	return ' '.join(parts)
+
+def HoursMinutesSeconds(seconds):
+
+	string = ''
+
+	hours = seconds // 3600
+	if hours:
+		string += '%sh' % (hours)
+	seconds -= hours * 3600
+
+	minutes = seconds // 60
+	if minutes:
+		string += "%s'" % (minutes)
+	seconds -= minutes * 60
+
+	string += '%s"' % (seconds)
+
+	return string
