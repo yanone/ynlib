@@ -106,6 +106,14 @@ class Color(object):
 		return Color(RGB = (self.R / other.R, self.G / other.G, self.B / other.B))
 
 
+	def lightHalf(self):
+		return sum((self.R, self.G, self.B)) / float(3) > 128
+
+	def darkHalf(self):
+		return sum((self.R, self.G, self.B)) / float(3) < 128
+
+
+
 
 # Conversion from http://stackoverflow.com/questions/14088375/how-can-i-convert-rgb-to-cmyk-and-vice-versa-in-python 
 cmyk_scale = 100
