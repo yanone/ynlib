@@ -1,5 +1,5 @@
 #serial is PySerial, the serial port software for Python
-import serial
+import serial, os
 
 
 
@@ -51,10 +51,13 @@ DMXINIT2= chr(10)+chr(02)+chr(0)+chr(0)+chr(0)
 #dmxdata= senddmx(dmxdata,1,0)
 
 class DMX(object):
-	def __init__(self, name, initValues = {}):
+	def __init__(self, name, initValues = {}, renderToFile = None):
 		self.name = name
 		self.ser=serial.Serial(self.name)
 		self.dmxdata = [chr(0)]*513
+		self.renderToFile = renderToFile
+		if self.renderToFile and os.path.exists(self.renderToFile):
+			os.remove(self.renderToFile)
 		
 		# Set init values
 		for channel in initValues.keys():
@@ -68,12 +71,16 @@ class DMX(object):
 		# set the channel number to the proper value
 		self.dmxdata[channel]=chr(int(intensity))
 		
-	def send(self):
+	def send(self, renderToFile = True):
 		# join turns the array data into a string we can send down the DMX
 		sdata=''.join(self.dmxdata)
 		# write the data to the serial port, this sends the data to your fixture
 		self.ser.write(DMXOPEN+DMXINTENSITY+sdata+DMXCLOSE)
 		# return the data with the new value in place
+		
+		if renderToFile and self.renderToFile:
+			os.system('echo "%s" >> "%s"' % ('\t'.join(map(str, map(ord, self.dmxdata[1:]))), self.renderToFile))
+			
 
 	def zeroAllChannels(self):
 		self.dmxdata=[chr(0)]*513
