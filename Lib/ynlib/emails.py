@@ -33,6 +33,7 @@ class Email(object):
 		self.BCC = []
 		self.sender = ''
 		self.sendername = ''
+		self.replyto = ''
 		self.subject = ''
 		self.body = ''
 		self.attachments = []
@@ -64,6 +65,9 @@ class Email(object):
 			msg['Cc'] = ','.join(self.CC)
 		msg.attach(MIMEText(self.body, 'plain', 'utf-8'))
 		
+		if self.replyto:
+			msg.add_header('reply-to', self.replyto)
+
 		for f in self.attachments:
 			if os.path.exists(f.path):
 				part = MIMEBase('application', "octet-stream")
