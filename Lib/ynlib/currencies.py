@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import time
 from strings import *
 
-def convertToEUR(source, amount = 1.0):
+def convertToEUR(source, amount = 1.0, timestamp = None):
 	u"""/
 	
 	"""
@@ -11,12 +12,25 @@ def convertToEUR(source, amount = 1.0):
 
 
 	# STEP 1, confirm currency
-	reply = json.loads(GetHTTP('http://www.apilayer.net/api/live?access_key=2c17819a3f130af5f5e867c77a362d27&currencies=%s' % source.upper()))
+	
+	url = 'http://www.apilayer.net/api/live?access_key=2c17819a3f130af5f5e867c77a362d27'
+	url += '&currencies=%s' % source.upper()
+	
+	reply = json.loads(GetHTTP(url))
 	if reply['success'] == True:
 
+		# historical
+		if timestamp != None:
+			url = 'http://www.apilayer.net/api/historical?access_key=2c17819a3f130af5f5e867c77a362d27&date=%s-%s-%s' % (time.strftime('%Y', time.gmtime(timestamp)), time.strftime('%m', time.gmtime(timestamp)), time.strftime('%d', time.gmtime(timestamp)))
+			url += '&currencies=EUR,%s' % source.upper()
 
-	
-		url = 'http://www.apilayer.net/api/live?access_key=2c17819a3f130af5f5e867c77a362d27&currencies=EUR,%s' % source.upper()
+
+		# live
+		else:
+			url = 'http://www.apilayer.net/api/live?access_key=2c17819a3f130af5f5e867c77a362d27'
+			url += '&currencies=EUR,%s' % source.upper()
+			if timestamp:
+				url += '&timestamp=%s' % timestamp
 	
 		reply = json.loads(GetHTTP(url))
 	
@@ -32,4 +46,3 @@ def convertToEUR(source, amount = 1.0):
 	else:
 		
 		return False, reply['error']['info']
-
