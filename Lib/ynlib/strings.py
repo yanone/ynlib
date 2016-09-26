@@ -462,7 +462,7 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = '.', locale 
 		part0.reverse()
 	
 		string = negative + thousandSeparator.join(part0) + numberSeparator + parts[1][:2]
-		string = string.replace('-', '–')
+		string = string.replace('-', '–&#x2060;')
 	
 		if currencySymbol:
 			string += currencySymbol
@@ -497,14 +497,26 @@ def HoursMinutesSeconds(seconds):
 
 	hours = seconds // 3600
 	if hours:
-		string += '%sh ' % (hours)
+		string += '%sh ' % (int(hours))
 	seconds -= hours * 3600
 
 	minutes = seconds // 60
 	if minutes:
-		string += "%s' " % (minutes)
+		string += "%s' " % (int(minutes))
 	seconds -= minutes * 60
 
-	string += '%s"' % (seconds)
+	string += '%s"' % (int(seconds))
 
 	return string
+
+def CleanFloat(number, locale = 'en'):
+	u"""\
+	Return number without decimal points if .0, otherwise with .x)
+	"""
+	try:
+		if number % 1 == 0:
+			return str(int(number))
+		else:
+			return str(float(number))
+	except:
+		pass
