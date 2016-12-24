@@ -1,3 +1,5 @@
+from ynlib.system import Execute
+
 def GetHTTP(url, timeout = 5, authentication = None):
 	u"""\
 	GET HTTP responses from the net. Returns False if attempt failed.
@@ -52,8 +54,8 @@ def PostHTTP(url, values = [], data = None, authentication = None, contentType =
 		headers["Accept"] = contentType
 
 	if authentication:
-		base64string = base64.encodestring(authentication)
-		headers["Authorization"] = "Basic %s" % base64string
+#		base64string = base64.encodestring(authentication)
+		headers["Authorization"] = "Basic %s" % Execute('printf %s | base64' % (authentication))
 
 	request = urllib2.Request(url, data = data, headers = headers)
 	response = urllib2.urlopen(request)
