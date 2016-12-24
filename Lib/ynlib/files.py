@@ -9,6 +9,8 @@ def ReadFromFile(path):
 		f.close()
 		return text
 
+	return ''
+
 def WriteToFile(path, string):
 	u"""\
 	Write content to file
