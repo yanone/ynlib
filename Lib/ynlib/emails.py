@@ -68,15 +68,27 @@ class Email(object):
 		if self.replyto:
 			msg.add_header('reply-to', self.replyto)
 
-		for f in self.attachments:
-			if os.path.exists(f.path):
+		for i, f in enumerate(self.attachments):
+			try:
+				if os.path.exists(f.path):
+					part = MIMEBase('application', "octet-stream")
+					part.set_payload(open(f.path, "rb").read())
+					Encoders.encode_base64(part)
+					if f.filename:
+						part.add_header('Content-Disposition', 'attachment; filename="%s"' % f.filename)
+					else:
+						part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f.path))
+					msg.attach(part)
+
+			except:
+			# file as binary
 				part = MIMEBase('application', "octet-stream")
-				part.set_payload(open(f.path, "rb").read())
+				part.set_payload(f.path)
 				Encoders.encode_base64(part)
 				if f.filename:
 					part.add_header('Content-Disposition', 'attachment; filename="%s"' % f.filename)
 				else:
-					part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f.path))
+					part.add_header('Content-Disposition', 'attachment; filename="%s"' % i)
 				msg.attach(part)
 		
 		s = smtplib.SMTP('localhost')
