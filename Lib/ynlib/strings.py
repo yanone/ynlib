@@ -16,11 +16,11 @@ def smartString(s, encoding='utf-8', errors='strict', from_encoding='utf-8'):
 	elif type(s) is unicode:
 		return s.encode(encoding, errors)
 	elif hasattr(s, '__str__'):
-		return self.smartString(str(s), encoding, errors, from_encoding)
+		return smartString(str(s), encoding, errors, from_encoding)
 	elif hasattr(s, '__unicode__'):
-		return self.smartString(unicode(s), encoding, errors, from_encoding)
+		return smartString(unicode(s), encoding, errors, from_encoding)
 	else:
-		return self.smartString(str(s), encoding, errors, from_encoding)
+		return smartString(str(s), encoding, errors, from_encoding)
 
 
 def feet(height_cms):
