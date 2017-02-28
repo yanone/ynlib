@@ -1,4 +1,4 @@
-from ynlib.system import Execute
+# -*- coding: utf-8 -*-
 
 def GetHTTP(url, timeout = 5, authentication = None):
 	u"""\
@@ -35,10 +35,11 @@ def GetHTTP(url, timeout = 5, authentication = None):
 #	except:
 #		return False
 
-def PostHTTP(url, values = [], data = None, authentication = None, contentType = None):
+def PostHTTP(url, values = {}, data = None, authentication = None, contentType = None, files = []):
 	u"""\
 	POST HTTP responses from the net. Values are dictionary {argument: value}
-	Authentication as "username:password"
+	Authentication as "username:password".
+	Files as list of paths.
 	"""
 
 	import urllib, urllib2, base64
@@ -54,13 +55,25 @@ def PostHTTP(url, values = [], data = None, authentication = None, contentType =
 		headers["Accept"] = contentType
 
 	if authentication:
-#		base64string = base64.encodestring(authentication)
-		headers["Authorization"] = "Basic %s" % Execute('printf %s | base64' % (authentication))
+		base64string = base64.encodestring(authentication)
+		headers["Authorization"] = "Basic %s" % base64string
 
 	request = urllib2.Request(url, data = data, headers = headers)
 	response = urllib2.urlopen(request)
 	return response.read()
 
+def PostFiles(url, values):
+
+	import urllib2
+
+	import poster.encode
+	import poster.streaminghttp
+
+	opener = poster.streaminghttp.register_openers()
+
+	datagen, headers = poster.encode.multipart_encode(values)
+	response = opener.open(urllib2.Request(url, datagen, headers))
+	return response.read()
 
 def WhatsMyIP():
 	u"""Pull your network's public IP address from the net, using whatsmyip.net"""
