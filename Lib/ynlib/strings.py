@@ -109,7 +109,8 @@ def AutoLinkString(string):
 	
 		return ''.join(output)
 
-	string = re.sub(r"\b(http://|https://|www\.)([a-zA-Z0-9-\.\/]+)?", repl, string)
+	string = re.sub(r"\b(http://|https://|www\.)(.+)?", repl, string)
+#	string = re.sub(r"\b(http://|https://|www\.)([a-zA-Z0-9-\.\/]+)?", repl, string)
 
 	return string
 
