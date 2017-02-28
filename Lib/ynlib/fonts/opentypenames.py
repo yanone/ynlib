@@ -2,6 +2,23 @@
 
 ### OT specs, from http://www.microsoft.com/typography/otspec/ttoreg.htm
 
+OTfeaturesOnByDefault = ['abvf', 'abvm', 'abvs', 'blwm', 'blws', 'calt', 'ccmp', 'clig', 'cpsp', 'fin2', 'fin3', 'haln', 'kern', 'liga', 'ljmo', 'locl', 'mkmk', 'pres', 'psts', 'rclt', 'rlig', 'rvrn', 'size', 'tjmo', 'valt', 'vjmo', 'vkrn', 'vrt2', 'vrtr', 'init', 'medi', 'fina', 'isol']
+
+OTfeatureDescriptions = {
+	"aalt": "Some software provide interfaces to access all possible combinations of a glyph.",
+	"zero": "The zero shows a slash or dot to distinguish its design from the letter O.",
+	"liga": "The most common ligatures.",
+	"dlig": "Less common ligatures.",
+	"calt": "Replaces glyphs based on their context, e.g. adjacent glyphs.",
+	"case": "Punctuation marks adapted for all-capital type setting.",
+	"cpsp": "Some letter-spacing applied to all-capital type setting.",
+	"c2sc": "Turns capital letters into Small Capitals.",
+	"frac": "Turns numbers and a slash and more numbers into fractions.",
+	"locl": "Design-adaptations of certain letters to certain languages.",
+	"smcp": "Turns lowercase letters into Small Capitals.",
+
+}
+
 OTfeatures = {
 	"aalt": "Access All Alternates",
 	"abvf": "Above-base Forms",
