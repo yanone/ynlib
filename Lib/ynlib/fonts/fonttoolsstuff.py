@@ -20,7 +20,7 @@ class Glyph(object):
 	def bounds(self):
 		if not self._bounds:
 			from fontTools.pens.boundsPen import BoundsPen, ControlBoundsPen
-			pen = BoundsPen(None)
+			pen = BoundsPen(self.parent.TTFont.getGlyphSet())
 			self.parent.TTFont.getGlyphSet()[self.name].draw(pen)
 			self._bounds = pen.bounds
 		return self._bounds
@@ -247,31 +247,53 @@ class Font(object):
 				replaceNaming = "--replacenames '%s,%s'" % (self.postScriptName, self.postScriptName.replace('-', '%s-' % nameSuffix))
 
 			# Feature freeze
-#			call = "python '%s' %s --features '%s' %s --info '%s' '%s'" % (pyftfeatfreeze, replaceNaming, ','.join(freezeFeatures), ("--suffix --usesuffix '%s'" % nameSuffix) if nameSuffix else '', self.path, tempFile)
+			call = "python '%s' %s --features '%s' %s --info '%s' '%s'" % (pyftfeatfreeze, replaceNaming, ','.join(freezeFeatures), ("--suffix --usesuffix '%s'" % nameSuffix) if nameSuffix else '', self.path, tempFile)
 #			print call
-#			Execute(call)
+			Execute(call)
 
 			# Subset
 #			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features='tnum,ordn,pnum,subs,numr,lnum,dlig,sups,dnom,locl,ccmp,hist,ss18,zero,ss19,aalt,case,sinf,frac,liga'" % (pyftsubset, self.path)
 
 
+			# Scenario 1
+			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features-='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(removeFeatures), outputFilePath)
+
+
 			if glyphs:
-				call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --layout-features='%s'" % (pyftsubset, self.path, ",".join(glyphs), ",".join(list(set(self.features()) - set(removeFeatures))))
+				call = "python '%s' '%s' --verbose --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --layout-features='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(glyphs), ",".join(list(set(self.features()) - (set(freezeFeatures) | set(removeFeatures)))), outputFilePath)
+#				call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(glyphs), outputFilePath)
 #				call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(list(set(self.features()) - set(['smcp', 'c2sc']))), outputFilePath)
-#			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(list(set(self.features()) - (set(freezeFeatures) | set(removeFeatures)))), outputFilePath)
-#			call = "python '%s' '%s' --verbose --name-languages='*' --name-legacy --name-IDs='*' --unicodes='*' --layout-features-='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(list((set(freezeFeatures) | set(removeFeatures)))), outputFilePath)
+			else:
+				call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(list(set(self.features()) - (set(freezeFeatures) | set(removeFeatures)))), outputFilePath)
+	#			call = "python '%s' '%s' --verbose --name-languages='*' --name-legacy --name-IDs='*' --unicodes='*' --layout-features-='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(list((set(freezeFeatures) | set(removeFeatures)))), outputFilePath)
+
+			# Scenario 1
+			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features-='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(removeFeatures), outputFilePath)
+
+			# Scenario 2
+			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(list(set(self.features()) - set(removeFeatures))), outputFilePath)
+
+			# Scenario 3
+			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --layout-features='*' --output-file='%s'" % (pyftsubset, self.path, ",".join(glyphs), outputFilePath)
+
+			# Scenario 4
+			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --layout-features='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(glyphs), ",".join(list(set(self.features()) - set(removeFeatures))), outputFilePath)
+
+			# Scenario 5
+			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --layout-features-='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(glyphs), ",".join(removeFeatures), outputFilePath)
+
 			print call
 			print Execute(call)
 
 
 
-f = Font('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSans-Regular.otf')
+#f = Font('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSans-Regular.otf')
 
-glyphs = []
-for g in f.glyphNames():
-	if not '.sc' in g:
-		glyphs.append(g)
+#glyphs = []
+#for g in f.glyphNames():
+#	if not '.sc' in g:
+#		glyphs.append(g)
 
-f.shrink('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSansOffice-Regular.otf', glyphs = glyphs)
-#f.shrink('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSansOffice-Regular.otf', freezeFeatures = ['lnum', 'tnum', 'zero'], removeFeatures = ['smcp', 'c2sc', 'pnum'], nameSuffix = 'Office')
+#f.shrink('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSansOffice-Regular.otf', glyphs = glyphs)
+#f.shrink('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSansOffice-Regular.otf', glyphs = glyphs, freezeFeatures = ['lnum', 'tnum', 'zero'], removeFeatures = ['smcp', 'c2sc'], nameSuffix = 'Office')
 
