@@ -14,6 +14,8 @@ class Color(object):
 			self.min = 0.0
 			self.max = 255.0
 			self.hex = hex
+			if self.hex.startswith('#'):
+				self.hex = self.hex[1:]
 			self.calcRGB()
 			#self.C, self.M, self.Y, self.K = rgb_to_cmyk(self.R, self.G, self.B)
 			self.type = 'RGB'
