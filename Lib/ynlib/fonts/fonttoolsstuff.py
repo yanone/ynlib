@@ -171,6 +171,34 @@ class Font(object):
 
 		return left, bottom, right, top
 
+	def UIReady(self, top, bottom, feature):
+
+		# Step 1: Find oversize glyphs
+		oversize = []
+		for glyph in self.glyphs():
+			bounds = glyph.bounds()
+			if bounds != None:
+				if bounds[1] < bottom or bounds[3] > top:
+					oversize.append(glyph)
+
+
+		# Step 2: Check for duplicates of oversize glyphs
+		duplicates = []
+		for glyph in oversize:
+			if self.glyph(glyph.name + '.' + feature):
+				glyph = self.glyph(glyph.name + '.' + feature)
+
+				bounds = glyph.bounds()
+				if bounds != None:
+					if bounds[1] >= bottom and bounds[3] <= top:
+						duplicates.append(glyph)
+			
+		ready = len(oversize) == len(duplicates)
+		if not ready:
+			print set(oversize) - set(duplicates)
+		return ready
+
+
 	def scripts(self):
 		_scripts = []
 		for scriptRecord in self.TTFont['GSUB'].table.ScriptList.ScriptRecord:
@@ -288,6 +316,7 @@ class Font(object):
 
 
 #f = Font('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSans-Regular.otf')
+#print f.UIReady(1040, -260, 'ss17')
 
 #glyphs = []
 #for g in f.glyphNames():
