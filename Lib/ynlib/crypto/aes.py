@@ -587,7 +587,7 @@ class AESModeOfOperation(object):
         return stringOut
 
 
-def encryptData(key, iv, data, mode=AESModeOfOperation.modeOfOperation["CBC"]):
+def encryptData(key, data, mode=AESModeOfOperation.modeOfOperation["CBC"]):
     """encrypt `data` using `key`
 
     `key` should be a string of bytes.
@@ -602,7 +602,7 @@ def encryptData(key, iv, data, mode=AESModeOfOperation.modeOfOperation["CBC"]):
     keysize = len(key)
     assert keysize in AES.keySize.values(), 'invalid key size: %s' % keysize
     # create a new iv using random data
-#    iv = [ord(i) for i in os.urandom(16)]
+    iv = [ord(i) for i in os.urandom(16)]
     moo = AESModeOfOperation()
     (mode, length, ciph) = moo.encrypt(data, mode, key, keysize, iv)
     # With padding, the original length does not need to be known. It's a bad
