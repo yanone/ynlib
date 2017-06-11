@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import fontTools.ttLib
-import os
+import os, copy
 from ynlib.system import Execute
 
 
@@ -26,9 +28,9 @@ class Glyph(object):
 		return self._bounds
 
 class Font(object):
-	def __init__(self, path):
+	def __init__(self, path, recalcTimestamp = True):
 		self.path = path
-		self.TTFont = fontTools.ttLib.TTFont(self.path)
+		self.TTFont = fontTools.ttLib.TTFont(self.path, recalcTimestamp = recalcTimestamp)
 
 		self._glyphNames = []
 		self._unicodes = []
@@ -51,6 +53,16 @@ class Font(object):
 		if not name in self._glyphNames:
 			self._glyphs[name] = Glyph(self, name, _unicode)
 #			self._glyphNames.append(name)
+
+	def tableChecksums(self):
+		import md5
+		checksums = {}
+		for key in self.TTFont.keys():
+			try:
+				checksums[key] = md5.new(self.TTFont.getTableData(key)).hexdigest()
+			except:
+				checksums[key] = 'n/a'
+		return checksums
 
 	def glyphs(self):
 		# Return all glyphs as list
@@ -313,16 +325,4 @@ class Font(object):
 			print call
 			print Execute(call)
 
-
-
-#f = Font('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSans-Regular.otf')
-#print f.UIReady(1040, -260, 'ss17')
-
-#glyphs = []
-#for g in f.glyphNames():
-#	if not '.sc' in g:
-#		glyphs.append(g)
-
-#f.shrink('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSansOffice-Regular.otf', glyphs = glyphs)
-#f.shrink('/Users/yanone/Schriften/Font Produktion/Fonts/NonameSansOffice-Regular.otf', glyphs = glyphs, freezeFeatures = ['lnum', 'tnum', 'zero'], removeFeatures = ['smcp', 'c2sc'], nameSuffix = 'Office')
 
