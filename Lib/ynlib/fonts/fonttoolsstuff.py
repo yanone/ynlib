@@ -109,7 +109,8 @@ class Font(object):
 	def stylisticSetName(self, feature):
 		for r in self.TTFont['GSUB'].table.FeatureList.FeatureRecord:
 			if r.FeatureTag == feature:
-				return self.TTFont['name'].getName(r.Feature.FeatureParams.UINameID, 1, 0, 0)
+				if hasattr(r.Feature.FeatureParams, 'UINameID'):
+					return str(self.TTFont['name'].getName(r.Feature.FeatureParams.UINameID, 1, 0, 0))
 
 
 	def defaultNumerals(self):
