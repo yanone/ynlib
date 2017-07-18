@@ -68,28 +68,8 @@ class Email(object):
 		if self.replyto:
 			msg.add_header('reply-to', self.replyto)
 
-		for i, f in enumerate(self.attachments):
-			try:
-				if os.path.exists(f.path):
-					part = MIMEBase('application', "octet-stream")
-					part.set_payload(open(f.path, "rb").read())
-					Encoders.encode_base64(part)
-					if f.filename:
-						part.add_header('Content-Disposition', 'attachment; filename="%s"' % f.filename)
-					else:
-						part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(f.path))
-					msg.attach(part)
-
-			except:
-			# file as binary
-				part = MIMEBase('application', "octet-stream")
-				part.set_payload(f.path)
-				Encoders.encode_base64(part)
-				if f.filename:
-					part.add_header('Content-Disposition', 'attachment; filename="%s"' % f.filename)
-				else:
-					part.add_header('Content-Disposition', 'attachment; filename="%s"' % i)
-				msg.attach(part)
+		for attachment in self.attachments:
+			msg.attach(attachment.part)
 		
 		s = smtplib.SMTP('localhost')
 		
@@ -103,13 +83,35 @@ class Email(object):
 		
 		return list(recipients)
 
-	def attachFile(self, path, filename = None):
+	def attachFile(self, path = None, filename = None, binary = None):
 		self.attachments.append(EmailAttachment(path, filename))
 
 class EmailAttachment(object):
-	def __init__(self, path, filename = None):
+	def __init__(self, path = None, filename = None, binary = None):
 		self.path = path
 		self.filename = filename
+		self.binary = binary
 	
-	
+		assert (self.path and os.path.exists(self.path)) or (self.filename and self.binary)
+
+		self.part = MIMEBase('application', "octet-stream")
+
+		if self.path:
+			try:
+				if os.path.exists(self.path):
+					part.set_payload(open(self.path, "rb").read())
+			except:
+				part.set_payload(self.path)
+
+		elif self.binary:
+			part.set_payload(self.binary)
+
+		Encoders.encode_base64(part)
+		if self.filename:
+			part.add_header('Content-Disposition', 'attachment; filename="%s"' % self.filename)
+		if self.path:
+			part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(self.path))
+
+
+
 	#%s %s' % (buy.localized('invoice'), os.path.basename(order.invoicePDFpath()))
