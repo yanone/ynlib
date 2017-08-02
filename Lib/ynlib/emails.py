@@ -1,3 +1,18 @@
+# Import smtplib for the actual sending function
+import smtplib, os, base64
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email.MIMEText import MIMEText
+from email.Utils import COMMASPACE, formatdate
+from email import Encoders
+from email.header import Header
+
+# Import the email modules we'll need
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+
+
 def SendEmail(recipients, sender, subject, body, attachments = None):
 
 	# Import smtplib for the actual sending function
@@ -40,25 +55,13 @@ class Email(object):
 
 	def send(self):
 		
-		# Import smtplib for the actual sending function
-		import smtplib, os
-		from email.MIMEMultipart import MIMEMultipart
-		from email.MIMEBase import MIMEBase
-		from email.MIMEText import MIMEText
-		from email.Utils import COMMASPACE, formatdate
-		from email import Encoders
-
-		# Import the email modules we'll need
-		from email.mime.multipart import MIMEMultipart
-		from email.mime.text import MIMEText
-		
 		msg = MIMEMultipart()
 		
 		msg['MIME-Version']="1.0"
 		msg['Content-Type'] = "text/plain;charset=utf-8"
 		msg['Content-Transfer-Encoding'] = "quoted-printable"
 
-		msg['Subject'] = self.subject
+		msg['Subject'] = Header(self.subject, 'utf-8')
 		msg['From'] = self.sender
 		msg['To'] = ','.join(self.recipients)
 		if self.CC:
@@ -84,33 +87,45 @@ class Email(object):
 		return list(recipients)
 
 	def attachFile(self, path = None, filename = None, binary = None):
-		self.attachments.append(EmailAttachment(path, filename))
+		self.attachments.append(EmailAttachment(path, filename, binary))
 
 class EmailAttachment(object):
 	def __init__(self, path = None, filename = None, binary = None):
 		self.path = path
 		self.filename = filename
 		self.binary = binary
-	
-		assert (self.path and os.path.exists(self.path)) or (self.filename and self.binary)
+
+		allHere = False
+		errorMessage = None
+		if self.path is not None and os.path.exists(self.path):
+			allHere = True
+		else:
+			errorMessage = 'self.path is given but doesn\'t exist on disk: "%s"' % self.path
+		if self.filename is not None and self.binary is not None:
+			allHere = True
+		else:
+			errorMessage = 'Filename (%s) or binary data (%sbytes) is missing.' % (self.filename, len(self.binary) if self.binary else 0)
+
+		if allHere == False:
+			raise ValueError(errorMessage)
 
 		self.part = MIMEBase('application', "octet-stream")
 
 		if self.path:
 			try:
 				if os.path.exists(self.path):
-					part.set_payload(open(self.path, "rb").read())
+					self.part.set_payload(open(self.path, "rb").read())
 			except:
-				part.set_payload(self.path)
+				self.part.set_payload(self.path)
 
 		elif self.binary:
-			part.set_payload(self.binary)
+			self.part.set_payload(self.binary)
 
-		Encoders.encode_base64(part)
+		Encoders.encode_base64(self.part)
 		if self.filename:
-			part.add_header('Content-Disposition', 'attachment; filename="%s"' % self.filename)
+			self.part.add_header('Content-Disposition', 'attachment; filename="%s"' % self.filename)
 		if self.path:
-			part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(self.path))
+			self.part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(self.path))
 
 
 
