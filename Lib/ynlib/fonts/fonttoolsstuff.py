@@ -265,65 +265,48 @@ class Font(object):
 
 	def shrink(self, outputFilePath, freezeFeatures = [], removeFeatures = [], nameSuffix = None, glyphs = []):
 
-		tempFile = outputFilePath.replace('.otf', '.temp.otf')
-
-		pyftfeatfreeze = None
-		pyftfeatfreezes = ['/home/juicie/wsgi/tools/pyftfeatfreeze.py', '/Users/yanone/Webseiten/wsgi/tools/pyftfeatfreeze.py']
-		for f in pyftfeatfreezes:
-			if os.path.exists(f):
-				pyftfeatfreeze = f
-				break
-
-		pyftsubset = None
-		pyftsubsets = ['/usr/local/bin/pyftsubset', '/home/juicie/wsgi/tools/pyftsubset.py', '/Users/yanone/Webseiten/wsgi/tools/pyftsubset.py']
-		for f in pyftsubsets:
-			if os.path.exists(f):
-				pyftsubset = f
-				break
-
-		if pyftfeatfreeze and pyftsubset:
-
-			replaceNaming = ""
-			if nameSuffix:
-				replaceNaming = "--replacenames '%s,%s'" % (self.postScriptName, self.postScriptName.replace('-', '%s-' % nameSuffix))
-
-			# Feature freeze
-			call = "python '%s' %s --features '%s' %s --info '%s' '%s'" % (pyftfeatfreeze, replaceNaming, ','.join(freezeFeatures), ("--suffix --usesuffix '%s'" % nameSuffix) if nameSuffix else '', self.path, tempFile)
-#			print call
-			Execute(call)
+			# Freeze features
+			if freezeFeatures:
+				from pyftfeatfreeze.pyftfeatfreeze import RemapByOTL
+				class FreezeOptions(object):
+					pass
+				options = FreezeOptions()
+				options.inpath = ''
+				options.outpath = ''
+				options.features = ','.join(freezeFeatures) # comma-separated list of OpenType feature tags, e.g. 'smcp,c2sc,onum'
+				options.script = 'latn' # OpenType script tag, e.g. 'cyrl' (default: '%(default)s')
+				options.lang = None # OpenType language tag, e.g. 'SRB ' (optional)
+				options.zapnames = False # zap glyphnames from the font ('post' table version 3, .ttf only)
+				options.rename = False # add a suffix to the font menu names (by default, the suffix will be constructed from the OpenType feature tags)
+				options.usesuffix = '' # use a custom suffix when -S is provided
+				options.replacenames = '' # search for strings in the font naming tables and replace them, format is 'search1/replace1,search2/replace2,...'
+				options.info = True # update font version string
+				options.report = False # report languages, scripts and features in font
+				options.names = False # output names of remapped glyphs during processing
+				options.verbose = False
+				remapByOTL = RemapByOTL(options)
+				remapByOTL.ttx = self.TTFont
+				remapByOTL.remapByOTL()
+				remapByOTL.renameFont()
 
 			# Subset
-#			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features='tnum,ordn,pnum,subs,numr,lnum,dlig,sups,dnom,locl,ccmp,hist,ss18,zero,ss19,aalt,case,sinf,frac,liga'" % (pyftsubset, self.path)
+			from fontTools.subset import Subsetter, Options
+#			features = list(set(self.features()) - (set(freezeFeatures) & set(removeFeatures)))
+			features = list(set(self.features()) - set(removeFeatures))
+			options = Options(layout_features = features, name_IDs = '*', glyph_names = True, name_legacy = True, name_languages = '*')
+			subsetter = Subsetter(options = options)
+
+			# populate with unicodes
+			unicodes = []
+			for t in self.TTFont['cmap'].tables:
+				if t.isUnicode():
+					unicodes.extend(t.cmap.keys())
+			subsetter.populate(unicodes = unicodes)
+			subsetter.subset(self.TTFont)
+
+			self.TTFont.save(outputFilePath)
 
 
-			# Scenario 1
-			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features-='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(removeFeatures), outputFilePath)
-
-
-			if glyphs:
-				call = "python '%s' '%s' --verbose --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --layout-features='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(glyphs), ",".join(list(set(self.features()) - (set(freezeFeatures) | set(removeFeatures)))), outputFilePath)
-#				call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(glyphs), outputFilePath)
-#				call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(list(set(self.features()) - set(['smcp', 'c2sc']))), outputFilePath)
-			else:
-				call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(list(set(self.features()) - (set(freezeFeatures) | set(removeFeatures)))), outputFilePath)
-	#			call = "python '%s' '%s' --verbose --name-languages='*' --name-legacy --name-IDs='*' --unicodes='*' --layout-features-='%s' --output-file='%s'" % (pyftsubset, tempFile, ",".join(list((set(freezeFeatures) | set(removeFeatures)))), outputFilePath)
-
-			# Scenario 1
-			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features-='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(removeFeatures), outputFilePath)
-
-			# Scenario 2
-			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='*' --layout-features='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(list(set(self.features()) - set(removeFeatures))), outputFilePath)
-
-			# Scenario 3
-			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --layout-features='*' --output-file='%s'" % (pyftsubset, self.path, ",".join(glyphs), outputFilePath)
-
-			# Scenario 4
-			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --layout-features='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(glyphs), ",".join(list(set(self.features()) - set(removeFeatures))), outputFilePath)
-
-			# Scenario 5
-			call = "python '%s' '%s' --name-languages='*' --name-legacy --name-IDs='*' --glyphs='%s' --layout-features-='%s' --output-file='%s'" % (pyftsubset, self.path, ",".join(glyphs), ",".join(removeFeatures), outputFilePath)
-
-			print call
-			print Execute(call)
-
-
+if __name__ == "__main__":
+	font = Font('/Users/yanone/Schriften/NonameSans-Regular.otf')
+	font.shrink('/Users/yanone/Schriften/NonameSans-Regular-Shrunk.otf')
