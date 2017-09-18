@@ -95,12 +95,22 @@ class Font(object):
 				if not featureRecord.FeatureTag in _features and i in featureRecord.Feature.LookupListIndex:
 					_features.append(featureRecord.FeatureTag)
 					break
+		for i, lookup in enumerate(self.TTFont['GPOS'].table.LookupList.Lookup):
+			for featureRecord in self.TTFont['GPOS'].table.FeatureList.FeatureRecord:
+				if not featureRecord.FeatureTag in _features and i in featureRecord.Feature.LookupListIndex:
+					_features.append(featureRecord.FeatureTag)
+					break
 		return _features
 
 	def lookupsPerFeature(self, featureName):
 		_lookups = []
 		for l, lookup in enumerate(self.TTFont['GSUB'].table.LookupList.Lookup):
 			for featureRecord in self.TTFont['GSUB'].table.FeatureList.FeatureRecord:
+				if l in featureRecord.Feature.LookupListIndex and featureRecord.FeatureTag == featureName:
+					for i in range(lookup.SubTableCount):
+						_lookups.append([featureRecord, lookup.SubTable[i]])
+		for l, lookup in enumerate(self.TTFont['GPOS'].table.LookupList.Lookup):
+			for featureRecord in self.TTFont['GPOS'].table.FeatureList.FeatureRecord:
 				if l in featureRecord.Feature.LookupListIndex and featureRecord.FeatureTag == featureName:
 					for i in range(lookup.SubTableCount):
 						_lookups.append([featureRecord, lookup.SubTable[i]])
@@ -263,7 +273,7 @@ class Font(object):
 #			print str(vars(x))
 		return ''.join([str(vars(x)) for x in self.lookupsPerFeatureScriptAndLanguage(featureName)])
 
-	def shrink(self, outputFilePath, freezeFeatures = [], removeFeatures = [], nameSuffix = None, glyphs = []):
+	def shrink(self, freezeFeatures = [], removeFeatures = [], glyphs = []):
 
 			# Freeze features
 			if freezeFeatures:
@@ -304,9 +314,22 @@ class Font(object):
 			subsetter.populate(unicodes = unicodes)
 			subsetter.subset(self.TTFont)
 
-			self.TTFont.save(outputFilePath)
-
 
 if __name__ == "__main__":
-	font = Font('/Users/yanone/Schriften/NonameSans-Regular.otf')
-	font.shrink('/Users/yanone/Schriften/NonameSans-Regular-Shrunk.otf')
+	original = '/Users/yanone/Schriften/NonameSans-Regular.otf'
+	new = '/Users/yanone/Schriften/NonameSans-Regular-Shrunk.otf'
+	font = Font(original)
+	font.shrink()
+	font.TTFont.save(new)
+	print round(os.path.getsize(new) / float(os.path.getsize(original)) * 100), '%'
+	font = Font(original)
+	newFont = Font(new)
+	for key in font.TTFont.keys():
+		try:
+			print key, len(font.TTFont.getTableData(key)), len(newFont.TTFont.getTableData(key))
+		except:
+			pass
+	print font.TTFont.keys()
+	print newFont.TTFont.keys()
+	print 'Missing features:', list(set(font.features()) - set(newFont.features()))
+	print 'Missing glyphs:', list(set(font.glyphNames()) - set(newFont.glyphNames()))
