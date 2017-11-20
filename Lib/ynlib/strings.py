@@ -425,8 +425,11 @@ def Garbage(length, uppercase = True, lowercase = True, numbers = True, punctuat
 		
 
 
-def formatPrice(price = 0, currencySymbol = None, numberSeparator = '.', locale = 'en', thousandSeparator = True):
+def formatPrice(price = 0, currencySymbol = None, numberSeparator = '.', locale = 'en', thousandSeparator = True, decimals = 2):
 	
+
+
+
 	if price != None:
 		if locale == 'de':
 			numberSeparator = ','
@@ -440,9 +443,9 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = '.', locale 
 		else:
 			thousandSeparator = ''
 	
-		price *= 100
+		price *= 10 ** decimals
 		price = round(price)
-		price /= 100.0
+		price /= float(10 ** decimals)
 
 		string = str(float(price))
 	
@@ -454,7 +457,7 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = '.', locale 
 
 		# Fill with zeros
 		parts = string.split('.')
-		parts[1] = parts[1].ljust(2, '0')
+		parts[1] = parts[1].ljust(decimals, '0')
 
 	
 		part0 = []
@@ -462,7 +465,7 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = '.', locale 
 			part0.append(parts[0][max(len(parts[0]) - i - 2, 0) : len(parts[0]) - i + 1])
 		part0.reverse()
 	
-		string = negative + thousandSeparator.join(part0) + numberSeparator + parts[1][:2]
+		string = negative + thousandSeparator.join(part0) + numberSeparator + parts[1][:decimals]
 		string = string.replace('-', '–&#x2060;')
 	
 		if currencySymbol:
