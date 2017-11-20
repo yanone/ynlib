@@ -85,9 +85,3 @@ def WhatsMyIP():
 		return m.group(1)
 	else:
 		return False
-
-def FollowURL(url):
-	import requests
-	r = requests.get(url)
-	return r.url
-
