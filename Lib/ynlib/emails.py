@@ -57,8 +57,8 @@ class Email(object):
 		
 		msg = MIMEMultipart()
 		
-		msg['MIME-Version']="1.0"
-		msg['Content-Type'] = "text/plain;charset=utf-8"
+#		msg['MIME-Version']="1.0"
+#		msg['Content-Type'] = "text/plain;charset=utf-8"
 		msg['Content-Transfer-Encoding'] = "quoted-printable"
 
 		msg['Subject'] = Header(self.subject, 'utf-8')
@@ -72,6 +72,8 @@ class Email(object):
 			msg.add_header('reply-to', self.replyto)
 
 		for attachment in self.attachments:
+#			if msg.has_key('Content-Type'):
+#				del msg['Content-Type']
 			msg.attach(attachment.part)
 		
 		s = smtplib.SMTP('localhost')
@@ -124,7 +126,7 @@ class EmailAttachment(object):
 		Encoders.encode_base64(self.part)
 		if self.filename:
 			self.part.add_header('Content-Disposition', 'attachment; filename="%s"' % self.filename)
-		if self.path:
+		elif self.path:
 			self.part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(self.path))
 
 
