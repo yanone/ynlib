@@ -524,3 +524,92 @@ def CleanFloat(number, locale = 'en'):
 			return str(float(number))
 	except:
 		pass
+
+
+# https://www.khtt.net/en/page/1821/the-big-kashida-secret
+
+def kashidas(string, length):
+
+	if length > len(string):
+
+		finalAndIsolatedOnly = [u'ء', u'ا', u'إ', u'ٳ', u'د', u'ذ', u'ڈ', u'ڌ', u'ڍ', u'ډ', u'ڊ', u'ڋ', u'ڎ', u'ڏ', u'ڐ', u'ۮ', u'ݙ', u'ݚ', u'ر', u'ز', u'ڑ', u'ڒ', u'ړ', u'ڔ', u'ڕ', u'ږ', u'ڗ', u'ژ', u'ڙ', u'ۯ', u'ݛ', u'ݫ', u'ݬ', u'ﻻ', u'ﻹ']
+
+		add = u'ـ' * (length - len(string))
+
+		# 1
+		if u'ـ' in string:
+			pos = string.find(u'ـ')
+			return string[:pos] + add + string[pos:]
+
+		# 2
+		letters = [u'س', u'ص', u'ښ', u'ڛ', u'ش', u'ۺ', u'ڜ', u'ﺺ', u'ڝ', u'ڞ', u'ض', u'ݜ', u'ݭ']
+		for letter in letters:
+			if letter in string:
+				pos = string.find(letter)
+#				print '#2', string[pos], string[pos+1]
+				return string[:pos+1] + add + string[pos+1:]
+
+		# 3. before the final form of Taa Marbutah, Haa, Dal,
+		letters = [u'ه', u'ۀ', u'ة', u'ە', u'د', u'ذ', u'ڈ', u'ڌ', u'ڍ', u'ډ', u'ڊ', u'ڋ', u'ڎ', u'ڏ', u'ڐ', u'ۮ', u'ݙ', u'ݚ']
+		for letter in letters:
+			if letter in string:
+				pos = string.find(letter)
+				if not string[pos-1] in finalAndIsolatedOnly:
+#					print '#3', string[pos-1], string[pos]
+					return string[:pos] + add + string[pos:]
+
+		# 4. before the final form of Alef, Tah, Lam, Kaf and Gaf,
+		letters = [u'ا', u'إ', u'ٳ', u'ب', u'پ', u'ٻ', u'ڀ', u'ت', u'ٽ', u'ث', u'ٹ', u'ٺ', u'ٿ', u'ݐ', u'ݑ', u'ݒ', u'ݓ', u'ݔ', u'ݕ', u'ݖ', u'ك', u'گ', u'ڰ', u'ڴ', u'ڬ', u'ڮ', u'ڲ', u'ڭ', u'ڱ', u'ڳ', u'ل', u'ڸ', u'ݪ']
+		for letter in letters:
+			if letter in string:
+				pos = string.find(letter)
+				if not string[pos-1] in finalAndIsolatedOnly and string[pos] in finalAndIsolatedOnly:
+#					print '#4', string[pos-1], string[pos]
+					return string[:pos] + add + string[pos:]
+
+		# 5. before the preceding medial Baa of Ra, Ya and Alef Maqsurah,
+		preceding = [u'ٮ', u'ب', u'پ', u'ٻ', u'ڀ', u'ت', u'ٽ', u'ث', u'ٹ', u'ٺ', u'ٿ', u'ݐ', u'ݑ', u'ݒ', u'ݓ', u'ݔ', u'ݕ', u'ݖ', u'ن', u'ں', u'ڻ', u'ڽ', u'ى', u'ي', u'ئ', u'ی', u'ې', u'ۑ', u'ٸ']
+		succeeding = [u'ر', u'ز', u'ڑ', u'ڒ', u'ړ', u'ڔ', u'ڕ', u'ږ', u'ڗ', u'ژ', u'ڙ', u'ۯ', u'ݛ', u'ݫ', u'ݬ', u'ى', u'ي', u'ئ', u'ی', u'ې', u'ۑ', u'ٸ']
+		for letter in succeeding:
+			if letter in string:
+				pos = string.find(letter)
+				if string[pos-1] in preceding and string[pos] in succeeding:
+#					print '#5', string[pos-1], string[pos]
+					return string[:pos] + add + string[pos:]
+
+		# 6. before the final form of Waw, Ain, Qaf and Fa,
+		letters = [u'ع', u'ڠ', u'غ', u'ف', u'ڤ', u'ڡ', u'ڢ', u'ڣ', u'ڥ', u'ڦ', u'ٯ', u'ق', u'ڧ', u'ڨ', u'و', u'ۄ', u'ۊ', u'ۏ', u'ؤ', u'ۅ', u'ۆ', u'ۇ', u'ۈ', u'ۉ', u'ۋ', u'ٷ', u'ݝ', u'ݞ', u'ݟ', u'ݠ', u'ݡ']
+		for letter in letters:
+			if letter in string:
+				pos = string.find(letter)
+				if not string[pos-1] in finalAndIsolatedOnly:
+					print '#6', string[pos-1], string[pos]
+					return string[:pos] + add + string[pos:]
+
+		# 7. before the final form of other characters that can be connected.
+		for letter in letters:
+			if letter in string:
+				pos = string.find(letter)
+				if not string[pos-1] in finalAndIsolatedOnly and string[pos] in finalAndIsolatedOnly:
+#					print '#7', string[pos-1], string[pos]
+					return string[:pos] + add + string[pos:]
+
+		return string
+	else:
+		return string
+
+
+def kashidaSentence(string, length):
+
+	if length > len(string):
+
+		individualLength = int(length / float(len(string.split(' '))))
+
+		sentence = []
+		for word in string.split(' '):
+			sentence.append(kashidas(word, individualLength))
+		return u' '.join(sentence)
+
+	else:
+		return string
+
