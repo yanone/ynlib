@@ -532,7 +532,8 @@ def kashidas(string, length):
 
 	if length > len(string):
 
-		finalAndIsolatedOnly = [u'ء', u'ا', u'إ', u'ٳ', u'د', u'ذ', u'ڈ', u'ڌ', u'ڍ', u'ډ', u'ڊ', u'ڋ', u'ڎ', u'ڏ', u'ڐ', u'ۮ', u'ݙ', u'ݚ', u'ر', u'ز', u'ڑ', u'ڒ', u'ړ', u'ڔ', u'ڕ', u'ږ', u'ڗ', u'ژ', u'ڙ', u'ۯ', u'ݛ', u'ݫ', u'ݬ', u'ﻻ', u'ﻹ']
+		finalAndIsolatedOnly = [u'ء', u'ا', u'إ', u'ٳ', u'د', u'ذ', u'ڈ', u'ڌ', u'ڍ', u'ډ', u'ڊ', u'ڋ', u'ڎ', u'ڏ', u'ڐ', u'ۮ', u'ݙ', u'ݚ', u'ر', u'ز', u'ڑ', u'ڒ', u'ړ', u'ڔ', u'ڕ', u'ږ', u'ڗ', u'ژ', u'ڙ', u'ۯ', u'ݛ', u'ݫ', u'ݬ', u'ﻻ', u'ﻹ', u'و', u'ۄ', u'ۊ', u'ۏ', u'ؤ', u'ۅ', u'ۆ', u'ۇ', u'ۈ', u'ۉ', u'ۋ', u'ٷ']
+
 
 		add = u'ـ' * (length - len(string))
 
@@ -579,20 +580,27 @@ def kashidas(string, length):
 
 		# 6. before the final form of Waw, Ain, Qaf and Fa,
 		letters = [u'ع', u'ڠ', u'غ', u'ف', u'ڤ', u'ڡ', u'ڢ', u'ڣ', u'ڥ', u'ڦ', u'ٯ', u'ق', u'ڧ', u'ڨ', u'و', u'ۄ', u'ۊ', u'ۏ', u'ؤ', u'ۅ', u'ۆ', u'ۇ', u'ۈ', u'ۉ', u'ۋ', u'ٷ', u'ݝ', u'ݞ', u'ݟ', u'ݠ', u'ݡ']
-		for letter in letters:
-			if letter in string:
-				pos = string.find(letter)
-				if not string[pos-1] in finalAndIsolatedOnly:
-					print '#6', string[pos-1], string[pos]
-					return string[:pos] + add + string[pos:]
+		for i, letter in enumerate(reversed(string)):
+			pos = len(string) - i - 1
+
+			# letter is at the end of word
+			if not string[pos-1] in finalAndIsolatedOnly and i == 0 and letter in letters:
+#				print '#6 letter is at the end of word', string[pos-1], string[pos]
+				return string[:pos] + add + string[pos:]
+
+			# letter is in middle of word, but final form
+			if not string[pos-1] in finalAndIsolatedOnly and string[pos] in letters and string[pos] in finalAndIsolatedOnly:
+#				print '#6 final form of letter', string[pos-1], string[pos]
+				return string[:pos] + add + string[pos:]
 
 		# 7. before the final form of other characters that can be connected.
-		for letter in letters:
-			if letter in string:
-				pos = string.find(letter)
-				if not string[pos-1] in finalAndIsolatedOnly and string[pos] in finalAndIsolatedOnly:
-#					print '#7', string[pos-1], string[pos]
-					return string[:pos] + add + string[pos:]
+		for i, letter in enumerate(reversed(string)):
+			pos = len(string) - i - 1
+			print pos, string[pos-1], string[pos]
+
+			if not string[pos-1] in finalAndIsolatedOnly:
+#				print '#7', string[pos-1], string[pos]
+				return string[:pos] + add + string[pos:]
 
 		return string
 	else:
