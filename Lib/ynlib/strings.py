@@ -537,45 +537,46 @@ def kashidas(string, length):
 
 		add = u'ـ' * (length - len(string))
 
-		# 1
+		# 1. after a kashida that is manually placed in the text by the user,
 		if u'ـ' in string:
 			pos = string.find(u'ـ')
+			# print '#1'
 			return string[:pos] + add + string[pos:]
 
-		# 2
+		# 2. after a Seen or Sad (initial and medial form),
 		letters = [u'س', u'ص', u'ښ', u'ڛ', u'ش', u'ۺ', u'ڜ', u'ﺺ', u'ڝ', u'ڞ', u'ض', u'ݜ', u'ݭ']
-		for letter in letters:
-			if letter in string:
-				pos = string.find(letter)
-#				print '#2', string[pos], string[pos+1]
+		for i, letter in enumerate(reversed(string)):
+			pos = len(string) - i - 1
+			if letter in letters:
+				# print '#2', string[pos], string[pos+1]
 				return string[:pos+1] + add + string[pos+1:]
 
 		# 3. before the final form of Taa Marbutah, Haa, Dal,
 		letters = [u'ه', u'ۀ', u'ة', u'ە', u'د', u'ذ', u'ڈ', u'ڌ', u'ڍ', u'ډ', u'ڊ', u'ڋ', u'ڎ', u'ڏ', u'ڐ', u'ۮ', u'ݙ', u'ݚ']
-		for letter in letters:
-			if letter in string:
-				pos = string.find(letter)
+		for i, letter in enumerate(reversed(string)):
+			pos = len(string) - i - 1
+			if letter in letters:
 				if not string[pos-1] in finalAndIsolatedOnly:
-#					print '#3', string[pos-1], string[pos]
+					# print '#3', string[pos-1], string[pos]
 					return string[:pos] + add + string[pos:]
 
 		# 4. before the final form of Alef, Tah, Lam, Kaf and Gaf,
 		letters = [u'ا', u'إ', u'ٳ', u'ب', u'پ', u'ٻ', u'ڀ', u'ت', u'ٽ', u'ث', u'ٹ', u'ٺ', u'ٿ', u'ݐ', u'ݑ', u'ݒ', u'ݓ', u'ݔ', u'ݕ', u'ݖ', u'ك', u'گ', u'ڰ', u'ڴ', u'ڬ', u'ڮ', u'ڲ', u'ڭ', u'ڱ', u'ڳ', u'ل', u'ڸ', u'ݪ']
-		for letter in letters:
-			if letter in string:
-				pos = string.find(letter)
+		for i, letter in enumerate(reversed(string)):
+			pos = len(string) - i - 1
+			if letter in letters:
 				if not string[pos-1] in finalAndIsolatedOnly and string[pos] in finalAndIsolatedOnly:
-#					print '#4', string[pos-1], string[pos]
+					# print '#4', string[pos-1], string[pos]
 					return string[:pos] + add + string[pos:]
 
 		# 5. before the preceding medial Baa of Ra, Ya and Alef Maqsurah,
 		preceding = [u'ٮ', u'ب', u'پ', u'ٻ', u'ڀ', u'ت', u'ٽ', u'ث', u'ٹ', u'ٺ', u'ٿ', u'ݐ', u'ݑ', u'ݒ', u'ݓ', u'ݔ', u'ݕ', u'ݖ', u'ن', u'ں', u'ڻ', u'ڽ', u'ى', u'ي', u'ئ', u'ی', u'ې', u'ۑ', u'ٸ']
 		succeeding = [u'ر', u'ز', u'ڑ', u'ڒ', u'ړ', u'ڔ', u'ڕ', u'ږ', u'ڗ', u'ژ', u'ڙ', u'ۯ', u'ݛ', u'ݫ', u'ݬ', u'ى', u'ي', u'ئ', u'ی', u'ې', u'ۑ', u'ٸ']
-		for letter in succeeding:
-			if letter in string:
-				pos = string.find(letter)
+		for i, letter in enumerate(reversed(string)):
+			pos = len(string) - i - 1
+			if letter in succeeding:
 				if string[pos-1] in preceding and string[pos] in succeeding:
-#					print '#5', string[pos-1], string[pos]
+					# print '#5', string[pos-1], string[pos]
 					return string[:pos] + add + string[pos:]
 
 		# 6. before the final form of Waw, Ain, Qaf and Fa,
@@ -585,12 +586,12 @@ def kashidas(string, length):
 
 			# letter is at the end of word
 			if not string[pos-1] in finalAndIsolatedOnly and i == 0 and letter in letters:
-#				print '#6 letter is at the end of word', string[pos-1], string[pos]
+				# print '#6 letter is at the end of word', string[pos-1], string[pos]
 				return string[:pos] + add + string[pos:]
 
 			# letter is in middle of word, but final form
 			if not string[pos-1] in finalAndIsolatedOnly and string[pos] in letters and string[pos] in finalAndIsolatedOnly:
-#				print '#6 final form of letter', string[pos-1], string[pos]
+				# print '#6 final form of letter', string[pos-1], string[pos]
 				return string[:pos] + add + string[pos:]
 
 		# 7. before the final form of other characters that can be connected.
@@ -599,7 +600,7 @@ def kashidas(string, length):
 			print pos, string[pos-1], string[pos]
 
 			if not string[pos-1] in finalAndIsolatedOnly:
-#				print '#7', string[pos-1], string[pos]
+				# print '#7', string[pos-1], string[pos]
 				return string[:pos] + add + string[pos:]
 
 		return string
