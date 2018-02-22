@@ -47,8 +47,8 @@ def test():
 	i = EUInvoicing(
 		homeCountry = 'DE',
 		EUwithVATdict = EUwithVATdict,
-		clientCountry = 'US',
-		clientVATID = None,
+		clientCountry = 'DE',
+		clientVATID = 'DE123456789',
 		netto = 100.0
 		)
 
@@ -56,3 +56,6 @@ def test():
 	print i.tax
 	print i.brutto
 	print i.reverseCharge
+
+if __name__ == '__main__':
+	test()
