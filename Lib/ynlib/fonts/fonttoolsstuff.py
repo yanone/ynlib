@@ -273,7 +273,7 @@ class Font(object):
 #			print str(vars(x))
 		return ''.join([str(vars(x)) for x in self.lookupsPerFeatureScriptAndLanguage(featureName)])
 
-	def shrink(self, freezeFeatures = [], removeFeatures = [], glyphs = []):
+	def shrink(self, freezeFeatures = [], removeFeatures = [], glyphs = [], replaceNames = ''):
 
 			# Freeze features
 			if freezeFeatures:
@@ -289,7 +289,7 @@ class Font(object):
 				options.zapnames = False # zap glyphnames from the font ('post' table version 3, .ttf only)
 				options.rename = False # add a suffix to the font menu names (by default, the suffix will be constructed from the OpenType feature tags)
 				options.usesuffix = '' # use a custom suffix when -S is provided
-				options.replacenames = '' # search for strings in the font naming tables and replace them, format is 'search1/replace1,search2/replace2,...'
+				options.replacenames = replaceNames # search for strings in the font naming tables and replace them, format is 'search1/replace1,search2/replace2,...'
 				options.info = True # update font version string
 				options.report = False # report languages, scripts and features in font
 				options.names = False # output names of remapped glyphs during processing
@@ -303,6 +303,7 @@ class Font(object):
 			from fontTools.subset import Subsetter, Options
 #			features = list(set(self.features()) - (set(freezeFeatures) & set(removeFeatures)))
 			features = list(set(self.features()) - set(removeFeatures))
+#			print 'target features', features
 			options = Options(layout_features = features, name_IDs = '*', glyph_names = True, name_legacy = True, name_languages = '*')
 			subsetter = Subsetter(options = options)
 
@@ -316,20 +317,30 @@ class Font(object):
 
 
 if __name__ == "__main__":
+	import io
 	original = '/Users/yanone/Schriften/NonameSans-Regular.otf'
 	new = '/Users/yanone/Schriften/NonameSans-Regular-Shrunk.otf'
+	newIO = io.BytesIO()
 	font = Font(original)
-	font.shrink()
-	font.TTFont.save(new)
+
+	# Office font
+	font.shrink(freezeFeatures = ['tnum', 'lnum', 'zero'], removeFeatures = ['aalt', 'onum', 'pnum', 'smcp', 'c2sc'])
+
+	font.TTFont.save(newIO)
+
+	f = open(new, 'wb')
+	f.write(newIO.getvalue())
+	f.close()
+
 	print round(os.path.getsize(new) / float(os.path.getsize(original)) * 100), '%'
 	font = Font(original)
 	newFont = Font(new)
-	for key in font.TTFont.keys():
-		try:
-			print key, len(font.TTFont.getTableData(key)), len(newFont.TTFont.getTableData(key))
-		except:
-			pass
-	print font.TTFont.keys()
-	print newFont.TTFont.keys()
-	print 'Missing features:', list(set(font.features()) - set(newFont.features()))
-	print 'Missing glyphs:', list(set(font.glyphNames()) - set(newFont.glyphNames()))
+	# for key in font.TTFont.keys():
+	# 	try:
+	# 		print key, len(font.TTFont.getTableData(key)), len(newFont.TTFont.getTableData(key))
+	# 	except:
+	# 		pass
+	# # print font.TTFont.keys()
+	# # print newFont.TTFont.keys()
+	# print 'Missing features:', list(set(font.features()) - set(newFont.features()))
+	# # print 'Missing glyphs:', list(set(font.glyphNames()) - set(newFont.glyphNames()))
