@@ -7,14 +7,15 @@ def GetHTTP(url, timeout = 5, authentication = None):
 	"""
 
 
-	import urllib2, base64
+	import urllib2, base64, certifi
 
 
 	request = urllib2.Request(url)
 	if authentication:
 		base64string = base64.encodestring(authentication)
 		request.add_header("Authorization", "Basic %s" % base64string)   
-	result = urllib2.urlopen(request)
+	result = urllib2.urlopen(request, cafile=certifi.where())
+
 
 
 
