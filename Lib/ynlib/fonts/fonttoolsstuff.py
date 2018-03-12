@@ -273,31 +273,30 @@ class Font(object):
 #			print str(vars(x))
 		return ''.join([str(vars(x)) for x in self.lookupsPerFeatureScriptAndLanguage(featureName)])
 
-	def shrink(self, freezeFeatures = [], removeFeatures = [], glyphs = [], replaceNames = ''):
+	def shrink(self, freezeFeatures = [], removeFeatures = [], glyphs = [], replaceNames = '', suffix = ''):
 
 			# Freeze features
-			if freezeFeatures:
-				from pyftfeatfreeze.pyftfeatfreeze import RemapByOTL
-				class FreezeOptions(object):
-					pass
-				options = FreezeOptions()
-				options.inpath = ''
-				options.outpath = ''
-				options.features = ','.join(freezeFeatures) # comma-separated list of OpenType feature tags, e.g. 'smcp,c2sc,onum'
-				options.script = 'latn' # OpenType script tag, e.g. 'cyrl' (default: '%(default)s')
-				options.lang = None # OpenType language tag, e.g. 'SRB ' (optional)
-				options.zapnames = False # zap glyphnames from the font ('post' table version 3, .ttf only)
-				options.rename = False # add a suffix to the font menu names (by default, the suffix will be constructed from the OpenType feature tags)
-				options.usesuffix = '' # use a custom suffix when -S is provided
-				options.replacenames = replaceNames # search for strings in the font naming tables and replace them, format is 'search1/replace1,search2/replace2,...'
-				options.info = True # update font version string
-				options.report = False # report languages, scripts and features in font
-				options.names = False # output names of remapped glyphs during processing
-				options.verbose = False
-				remapByOTL = RemapByOTL(options)
-				remapByOTL.ttx = self.TTFont
-				remapByOTL.remapByOTL()
-				remapByOTL.renameFont()
+			from pyftfeatfreeze.pyftfeatfreeze import RemapByOTL
+			class FreezeOptions(object):
+				pass
+			options = FreezeOptions()
+			options.inpath = ''
+			options.outpath = ''
+			options.features = ','.join(freezeFeatures) # comma-separated list of OpenType feature tags, e.g. 'smcp,c2sc,onum'
+			options.script = 'latn' # OpenType script tag, e.g. 'cyrl' (default: '%(default)s')
+			options.lang = None # OpenType language tag, e.g. 'SRB ' (optional)
+			options.zapnames = False # zap glyphnames from the font ('post' table version 3, .ttf only)
+			options.rename = True if suffix else False # add a suffix to the font menu names (by default, the suffix will be constructed from the OpenType feature tags)
+			options.usesuffix = suffix # use a custom suffix when -S is provided
+			options.replacenames = replaceNames # search for strings in the font naming tables and replace them, format is 'search1/replace1,search2/replace2,...'
+			options.info = True # update font version string
+			options.report = False # report languages, scripts and features in font
+			options.names = False # output names of remapped glyphs during processing
+			options.verbose = True
+			remapByOTL = RemapByOTL(options)
+			remapByOTL.ttx = self.TTFont
+			remapByOTL.remapByOTL()
+			remapByOTL.renameFont()
 
 			# Subset
 			from fontTools.subset import Subsetter, Options
@@ -324,7 +323,7 @@ if __name__ == "__main__":
 	font = Font(original)
 
 	# Office font
-	font.shrink(freezeFeatures = ['tnum', 'lnum', 'zero'], removeFeatures = ['aalt', 'onum', 'pnum', 'smcp', 'c2sc'])
+	font.shrink(freezeFeatures = ['tnum', 'lnum', 'zero'], removeFeatures = ['aalt', 'onum', 'pnum', 'smcp', 'c2sc'], suffix = 'Office')
 
 	font.TTFont.save(newIO)
 
