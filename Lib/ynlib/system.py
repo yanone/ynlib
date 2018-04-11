@@ -1,3 +1,5 @@
+import platform
+
 def Execute(command):
 	u"""\
 	Execute system command, return output.
@@ -85,3 +87,56 @@ def GetChr(waitMaximalSeconds = None):
 		termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
 		fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
 	return c
+
+
+def MachineName():
+	if platform.system() == 'Linux':
+		
+		cpu = ''
+		itemsUsed = []
+		procinfo = Execute('cat /proc/cpuinfo')
+
+		for line in procinfo.split('\n'):
+			if ':' in line:
+				k, v = line.split(':')[:2]
+				if k.strip() == 'model name' and not k in itemsUsed:
+					cpu += v.strip()
+					itemsUsed.append(k)
+		return '%s %s with %s' % (Execute('cat /sys/devices/virtual/dmi/id/sys_vendor'), Execute('cat /sys/devices/virtual/dmi/id/product_name'), cpu)
+
+	elif platform.system() == 'Darwin':
+
+		name = None
+
+
+		# Approach 1
+		import sys
+		import plistlib
+		import subprocess
+		from Cocoa import NSBundle
+		data = plistlib.readPlistFromString(Execute('system_profiler -xml SPHardwareDataType'))
+
+		if (len(sys.argv) == 2):
+			model = sys.argv[1]
+		else:
+			model = subprocess.check_output(["/usr/sbin/sysctl", "-n", "hw.model"]).strip()
+
+		serverInfoBundle=NSBundle.bundleWithPath_("/System/Library/PrivateFrameworks/ServerInformation.framework/")
+		sysinfofile=serverInfoBundle.URLForResource_withExtension_subdirectory_("SIMachineAttributes", "plist", "")
+
+		plist = plistlib.readPlist(sysinfofile.path())
+
+		if (model in plist):
+			name = plist[model]["_LOCALIZABLE_"]["marketingModel"]
+
+		# Approach 2
+		if not name:
+			name = data[0]['_items'][0]['machine_name']
+
+
+		return 'Apple %s (%s) with %s %s, %s memory' % (name, data[0]['_items'][0]['machine_model'], data[0]['_items'][0]['cpu_type'], data[0]['_items'][0]['current_processor_speed'], data[0]['_items'][0]['physical_memory'])
+
+if __name__ == '__main__':
+	print MachineName()
+	# print MachineName()[0]['_items']
+	# print MachineName()[0]['_items'][0]['machine_name']
