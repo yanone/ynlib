@@ -1,5 +1,5 @@
 def ExecuteAppleScript(text):
-	u"""Execute AppleScript code through osascript"""
+	"""Execute AppleScript code through osascript"""
 
 	import os
 	lines = text.split("\n")

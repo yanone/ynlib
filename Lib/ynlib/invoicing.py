@@ -19,14 +19,14 @@ class EUInvoicing(object):
 			self.taxPercentage = self.EUwithVATdict[self.clientCountry]
 
 		# EU, private
-		elif self.clientCountry in self.EUwithVATdict.keys() and self.clientVATID == None:
+		elif self.clientCountry in list(self.EUwithVATdict.keys()) and self.clientVATID == None:
 			self.tax = self.netto * self.taxPercent(self.clientCountry)
 			self.brutto = self.netto + self.tax
 			self.taxPercentage = self.EUwithVATdict[self.clientCountry]
 			self.EUprivate = True
 
 		# EU, company
-		elif self.clientCountry in self.EUwithVATdict.keys() and self.clientVATID != None:
+		elif self.clientCountry in list(self.EUwithVATdict.keys()) and self.clientVATID != None:
 			self.reverseCharge = True
 
 		# Outside EU
@@ -52,10 +52,10 @@ def test():
 		netto = 100.0
 		)
 
-	print i.netto
-	print i.tax
-	print i.brutto
-	print i.reverseCharge
+	print(i.netto)
+	print(i.tax)
+	print(i.brutto)
+	print(i.reverseCharge)
 
 if __name__ == '__main__':
 	test()

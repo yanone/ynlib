@@ -1,5 +1,5 @@
 def ReadFromFile(path):
-	u"""\
+	"""\
 	Return content of file
 	"""
 	import os, codecs
@@ -12,7 +12,7 @@ def ReadFromFile(path):
 	return ''
 
 def WriteToFile(path, string):
-	u"""\
+	"""\
 	Write content to file
 	"""
 	f = open(path, 'w')

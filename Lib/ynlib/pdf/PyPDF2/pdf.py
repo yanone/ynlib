@@ -49,7 +49,7 @@ import sys
 import uuid
 from sys import version_info
 if version_info < ( 3, 0 ):
-    from cStringIO import StringIO
+    from io import StringIO
 else:
     from io import StringIO
 
@@ -1684,7 +1684,7 @@ class PdfFileReader(object):
 
     def read(self, stream):
         debug = False
-        if debug: print(">>read", stream)
+        if debug: print((">>read", stream))
         # start at the end:
         stream.seek(-1, 2)
         if not stream.tell():
@@ -1695,7 +1695,7 @@ class PdfFileReader(object):
             if stream.tell() < last1K:
                 raise utils.PdfReadError("EOF marker not found")
             line = self.readNextEndLine(stream)
-            if debug: print("  line:",line)
+            if debug: print(("  line:",line))
 
         # find startxref entry - the location of the xref table
         line = self.readNextEndLine(stream)

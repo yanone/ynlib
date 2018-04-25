@@ -337,7 +337,7 @@ class XmpInformation(PdfObject):
                 key = node.localName
                 while True:
                     # see documentation about PDFX_NAMESPACE earlier in file
-                    idx = key.find(u_("\u2182"))
+                    idx = key.find(u_("\\u2182"))
                     if idx == -1:
                         break
                     key = key[:idx] + chr(int(key[idx+1:idx+5], base=16)) + key[idx+5:]

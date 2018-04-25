@@ -14,7 +14,7 @@ def CompFont(fontfilepath):
 	global compositorfontfiles
 
 	# Sort
-	sortedcompositorfontfiles = sorted(compositorfontfiles.iteritems(), key=itemgetter(1))
+	sortedcompositorfontfiles = sorted(iter(compositorfontfiles.items()), key=itemgetter(1))
 	
 	if not fontfilepath in compositorfontfiles:
 		compositorfontfiles[fontfilepath] = [time.time(), compositor.Font(fontfilepath)]
@@ -32,7 +32,7 @@ def CompFont(fontfilepath):
 
 
 def Process(fontfilepath, string, features = None):
-	u"""\
+	"""\
 	Process a string on a font file using compositor. Returns (glyphsets, glyphrecords).
 	"""
 
@@ -53,7 +53,7 @@ def Process(fontfilepath, string, features = None):
 	return returnlist
 
 def BoundingBox(glyphset):
-	u"""\
+	"""\
 	Calculate Bounding Box with BoundingBoxPen
 	"""
 	
@@ -64,7 +64,7 @@ def BoundingBox(glyphset):
 	return bboxpen
 
 def TextWidth(fontfilepath, string, features = None):
-	u"""\
+	"""\
 	Process a string and return complete width.
 	"""
 	width = 0

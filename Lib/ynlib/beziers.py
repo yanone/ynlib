@@ -76,7 +76,7 @@ class Point(object):
 
 
 def solveCubicBezier(p1, p2, p3, p4, t):
-	u"""\
+	"""\
 	Solve cubic Bezier equation and 1st and 2nd derivative.
 	Returns position of on-curve point p1234, and vector of 1st and 2nd derivative.
 	"""
@@ -92,14 +92,14 @@ def solveCubicBezier(p1, p2, p3, p4, t):
 	return r, r1, r2
 
 def solveCubicBezierCurvature(r, r1, r2):
-	u"""\
+	"""\
 	Calc curvature using cubic Bezier equation and 1st and 2nd derivative.
 	"""
 	return (r1.x * r2.y - r1.y * r2.x) / (r1.x**2 + r1.y**2)**1.5
 
 
 def _SplitCubicAtT(p1, p2, p3, p4, t):
-	u"""\
+	"""\
 	Split cubic Beziers curve at relative value t, return the two resulting segments.
 	"""
 	
@@ -117,7 +117,7 @@ def _SplitCubicAtT(p1, p2, p3, p4, t):
 	return (p1, p12, p123, p1234), (p1234, p234, p34, p4)
 
 def SplitCubicAtT(p1, p2, p3, p4, t):
-	u"""\
+	"""\
 	Split cubic Beziers curve at relative value t, return the two resulting segments.
 	"""
 	
@@ -136,7 +136,7 @@ def SplitCubicAtT(p1, p2, p3, p4, t):
 
 
 def GuessSmoothSegmentConnection(s1, s2):
-	u"""\
+	"""\
 	Returns True if the two segments are connected and their inner BCPs align (within a certain threshold).
 	"""
 
@@ -151,7 +151,7 @@ def GuessSmoothSegmentConnection(s1, s2):
 		return False
 
 def CurveSegments(glyph):
-	u"""\
+	"""\
 	Returns a list of consecutive curve segments of RGlyph object using ynlib.pens.CurveSegmentListPen
 	"""
 
@@ -164,7 +164,7 @@ def CurveSegments(glyph):
 	return pen.curvesegments
 
 def ConsecutiveCurveSegments(segments, smooth = False):
-	u"""\
+	"""\
 	Turns a flat list of curve segments into lists of lists of consecutive curve segments.
 	If 'smooth' is set to True, segments will only be connected if their connection is guessed to be smooth.
 	"""
@@ -196,7 +196,7 @@ def ConsecutiveCurveSegments(segments, smooth = False):
 	
 
 def SameLengthSegments(segment, distance, precision, firstpoint = None):
-	u"""\
+	"""\
 	Finds points on a curve segment with equal distance (approximated through binary search, with given precision).
 
 	If firstpoint is given, that would in most cases be the second last calculated point of the previous segment

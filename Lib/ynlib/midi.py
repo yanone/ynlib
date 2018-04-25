@@ -67,11 +67,11 @@ class MidiWithCallBack:
 			value = midi.getControllerValue()
 		
 		# Default mapping
-		if not self.functions.has_key(channel):
+		if channel not in self.functions:
 			channel = -1
 
 		# Call
-		if self.functions.has_key(channel):
+		if channel in self.functions:
 			f = self.functions[channel]
 			#print f
 			#eval(f.__name__ + '(midi)')

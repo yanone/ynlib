@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 def GetHTTP(url, timeout = 5, authentication = None):
-	u"""\
+	"""\
 	GET HTTP responses from the net. Returns False if attempt failed.
 	Authentication as "username:password"
 	"""
 
 
-	import urllib2, base64, certifi
+	import urllib.request, urllib.error, urllib.parse, base64, certifi
 
 
-	request = urllib2.Request(url)
+	request = urllib.request.Request(url)
 	if authentication:
 		base64string = base64.encodestring(authentication)
 		request.add_header("Authorization", "Basic %s" % base64string)   
-	result = urllib2.urlopen(request, cafile=certifi.where())
+	result = urllib.request.urlopen(request, cafile=certifi.where())
 
 
 
@@ -27,7 +27,7 @@ def GetHTTP(url, timeout = 5, authentication = None):
 		content = result.read()
 		#print encoding
 		try:
-			content = unicode(content, encoding)
+			content = str(content, encoding)
 		except:
 			pass
 		return content
@@ -37,16 +37,16 @@ def GetHTTP(url, timeout = 5, authentication = None):
 #		return False
 
 def PostHTTP(url, values = {}, data = None, authentication = None, contentType = None, files = []):
-	u"""\
+	"""\
 	POST HTTP responses from the net. Values are dictionary {argument: value}
 	Authentication as "username:password".
 	Files as list of paths.
 	"""
 
-	import urllib, urllib2, base64
+	import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, base64
 	
 	if values:
-		data = urllib.urlencode(values)
+		data = urllib.parse.urlencode(values)
 		
 	headers = {}
 
@@ -59,13 +59,13 @@ def PostHTTP(url, values = {}, data = None, authentication = None, contentType =
 		base64string = base64.encodestring(authentication)
 		headers["Authorization"] = "Basic %s" % base64string
 
-	request = urllib2.Request(url, data = data, headers = headers)
-	response = urllib2.urlopen(request)
+	request = urllib.request.Request(url, data = data, headers = headers)
+	response = urllib.request.urlopen(request)
 	return response.read()
 
 def PostFiles(url, values):
 
-	import urllib2
+	import urllib.request, urllib.error, urllib.parse
 
 	import poster.encode
 	import poster.streaminghttp
@@ -73,11 +73,11 @@ def PostFiles(url, values):
 	opener = poster.streaminghttp.register_openers()
 
 	datagen, headers = poster.encode.multipart_encode(values)
-	response = opener.open(urllib2.Request(url, datagen, headers))
+	response = opener.open(urllib.request.Request(url, datagen, headers))
 	return response.read()
 
 def WhatsMyIP():
-	u"""Pull your network's public IP address from the net, using whatsmyip.net"""
+	"""Pull your network's public IP address from the net, using whatsmyip.net"""
 
 	import re
 	whatsmyiphtml = GetHTTP("http://whatsmyip.net/")

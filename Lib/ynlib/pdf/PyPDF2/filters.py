@@ -37,7 +37,7 @@ __author_email__ = "biziqe@mathieu.fenniak.net"
 from .utils import PdfReadError, ord_, chr_
 from sys import version_info
 if version_info < ( 3, 0 ):
-    from cStringIO import StringIO
+    from io import StringIO
 else:
     from io import StringIO
     import struct

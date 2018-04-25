@@ -1,5 +1,5 @@
 def RGlyphFromGlifString(glifString):
-	u"""\
+	"""\
 	Return RGlyph object directly from .glif file
 	"""
 	
@@ -12,7 +12,7 @@ def RGlyphFromGlifString(glifString):
 
 
 def FakePointStructure(glyph):
-	u"""\
+	"""\
 	Returns a string representing the outline structure of a glyph, for comparison.
 	Not very safe.
 	"""

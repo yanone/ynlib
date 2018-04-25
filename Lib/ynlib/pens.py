@@ -1,7 +1,7 @@
 from fontTools.pens.basePen import BasePen
 
 class CurveSegmentListPen(BasePen):
-	u"""\
+	"""\
 	Accumulates a list of curve segments in pen.curvesegments
 	"""
 
@@ -24,7 +24,7 @@ class CurveSegmentListPen(BasePen):
 
 
 class pySVGPen(BasePen):
-	u"""\
+	"""\
 	Draws onto pySVG path object
 	"""
 
@@ -36,17 +36,22 @@ class pySVGPen(BasePen):
 		self.x = x
 		self.y = y
 
-	def _moveTo(self, (x,y)):
+	def _moveTo(self, xxx_todo_changeme):
+		(x,y) = xxx_todo_changeme
 		x = x + self.x
 		y = y + self.y	
 		self.pathobject.appendMoveToPath(x * self.scale, -y * self.scale, False)
 
-	def _lineTo(self, (x,y)):
+	def _lineTo(self, xxx_todo_changeme1):
+		(x,y) = xxx_todo_changeme1
 		x = x + self.x
 		y = y + self.y	
 		self.pathobject.appendLineToPath(x * self.scale, -y * self.scale, False)
 
-	def _curveToOne(self, (x1,y1), (x2,y2), (x3,y3)):
+	def _curveToOne(self, xxx_todo_changeme2, xxx_todo_changeme3, xxx_todo_changeme4):
+		(x1,y1) = xxx_todo_changeme2
+		(x2,y2) = xxx_todo_changeme3
+		(x3,y3) = xxx_todo_changeme4
 		x1 = x1 + self.x	
 		x2 = x2 + self.x	
 		x3 = x3 + self.x	
@@ -63,7 +68,7 @@ class pySVGPen(BasePen):
 
 
 class NodeBoxPen(BasePen):
-	u"""\
+	"""\
 	Draws onto NodeBox canvas
 	"""
 
@@ -75,17 +80,22 @@ class NodeBoxPen(BasePen):
 		self.x = x
 		self.y = -1 * y
 
-	def _moveTo(self, (x,y)):
+	def _moveTo(self, xxx_todo_changeme5):
+		(x,y) = xxx_todo_changeme5
 		x = x + self.x
 		y = y + self.y	
 		self.motherobject.moveto(x * self.scale, -y * self.scale)
 
-	def _lineTo(self, (x,y)):
+	def _lineTo(self, xxx_todo_changeme6):
+		(x,y) = xxx_todo_changeme6
 		x = x + self.x
 		y = y + self.y	
 		self.motherobject.lineto(x * self.scale, -y * self.scale)
 
-	def _curveToOne(self, (x1,y1), (x2,y2), (x3,y3)):
+	def _curveToOne(self, xxx_todo_changeme7, xxx_todo_changeme8, xxx_todo_changeme9):
+		(x1,y1) = xxx_todo_changeme7
+		(x2,y2) = xxx_todo_changeme8
+		(x3,y3) = xxx_todo_changeme9
 		x1 = x1 + self.x	
 		x2 = x2 + self.x	
 		x3 = x3 + self.x	
@@ -102,7 +112,7 @@ class NodeBoxPen(BasePen):
 
 
 class BoundingBoxPen(BasePen):
-	u"""\
+	"""\
 	Calculates BBox. Will be stored in self.ll and self.ur, self.width and self.height
 	"""
 
@@ -149,13 +159,18 @@ class BoundingBoxPen(BasePen):
 		self.width = None
 		self.height = None
 
-	def _moveTo(self, (x,y)):
+	def _moveTo(self, xxx_todo_changeme10):
+		(x,y) = xxx_todo_changeme10
 		self.Push(x, y)
 
-	def _lineTo(self, (x,y)):
+	def _lineTo(self, xxx_todo_changeme11):
+		(x,y) = xxx_todo_changeme11
 		self.Push(x, y)
 
-	def _curveToOne(self, (x1,y1), (x2,y2), (x3,y3)):
+	def _curveToOne(self, xxx_todo_changeme12, xxx_todo_changeme13, xxx_todo_changeme14):
+		(x1,y1) = xxx_todo_changeme12
+		(x2,y2) = xxx_todo_changeme13
+		(x3,y3) = xxx_todo_changeme14
 		self.Push(x1, y1)
 		self.Push(x2, y2)
 		self.Push(x3, y3)

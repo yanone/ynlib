@@ -35,7 +35,7 @@ def codepages():
 					elif ' ' in line and line.split(' ')[1].startswith('0x'):
 						value = int(line.split(' ')[1][2:], 16)
 
-					if value and value >= 32 and not value in ignore and unicodedata.category(unichr(value)) != 'Cc':
+					if value and value >= 32 and not value in ignore and unicodedata.category(chr(value)) != 'Cc':
 						_codepages[codepageName].append(value)
 
 			except:

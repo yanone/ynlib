@@ -1,5 +1,5 @@
 def CollectFunctions(libraryname, librarypath, code, functioncodedict = {}):
-	u"""\
+	"""\
 	Collect python functions from external libraries into one single, shippable Python code string.
 	'paths' provides a 'libname': 'pathtolib' dictionary,
 	'string' is the Python code to be parsed and replaced.
@@ -19,7 +19,7 @@ def CollectFunctions(libraryname, librarypath, code, functioncodedict = {}):
 		# RE result processing
 		m_wholematch = m.group(1)
 		m_libraryname = m.group(2)
-		functionstogather = map(string.strip, m.group(3).split(','))
+		functionstogather = list(map(string.strip, m.group(3).split(',')))
 
 		# Pull Python code from file		
 		pythoncodefromfile = ReadFromFile(os.path.join(librarypath, m_libraryname + '.py'))
@@ -44,14 +44,14 @@ def CollectFunctions(libraryname, librarypath, code, functioncodedict = {}):
 		
 	# Top level replacement
 	if '##INSERTCODE##' in code:
-		gatheredfunctioncode = '\n'.join(functioncodedict.values())
+		gatheredfunctioncode = '\n'.join(list(functioncodedict.values()))
 		code = string.replace(code, '##INSERTCODE##', gatheredfunctioncode)
 
 	return code, functioncodedict
 
 
 def GrabFunction(code, function):
-	u"""\
+	"""\
 	Get and return the code of a function from a string of Python code.
 	"""
 	
@@ -62,7 +62,7 @@ def GrabFunction(code, function):
 	
 
 def Environment():
-	u"""\
+	"""\
 	Return the environment, from which this script is being called.
 	Currently supported: FontLab, GlyphsApp, NodeBox, Python
 	"""

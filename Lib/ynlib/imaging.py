@@ -1,5 +1,5 @@
 def InterpolateImageFGColorOnTop(bg, fg, fgcolor):
-	u"""\
+	"""\
 	Interpolate PIL image in the way that RRGGBB fgcolor stays and the rest is interpolated against it.
 	fg needs to be an image with values between black and fgcolor.
 	"""

@@ -19,11 +19,11 @@ DMXINTENSITY=chr(6)+chr(1)+chr(2)
 
 #this code seems to initialize the communications. Char 3 is a request for the controller's
 #parameters. I didn't bother reading that data, I'm just assuming it's an init string.
-DMXINIT1= chr(03)+chr(02)+chr(0)+chr(0)+chr(0)
+DMXINIT1= chr(0o3)+chr(0o2)+chr(0)+chr(0)+chr(0)
 
 #likewise, char 10 requests the serial number of the unit. I'm not receiving it or using it
 #but the other softwares I tested did. You might want to.
-DMXINIT2= chr(10)+chr(02)+chr(0)+chr(0)+chr(0)
+DMXINIT2= chr(10)+chr(0o2)+chr(0)+chr(0)+chr(0)
 
 #open serial port 4. This is where the USB virtual port hangs on my machine. You
 #might need to change this number. Find out what com port your DMX controller is on
@@ -60,7 +60,7 @@ class DMX(object):
 			os.remove(self.renderToFile)
 		
 		# Set init values
-		for channel in initValues.keys():
+		for channel in list(initValues.keys()):
 			self.setValue(channel, initValues[channel])
 		
 		self.ser.write( DMXOPEN+DMXINIT1+DMXCLOSE)
@@ -79,7 +79,7 @@ class DMX(object):
 		# return the data with the new value in place
 		
 		if renderToFile and self.renderToFile:
-			os.system('echo "%s" >> "%s"' % ('\t'.join(map(str, map(ord, self.dmxdata[1:]))), self.renderToFile))
+			os.system('echo "%s" >> "%s"' % ('\t'.join(map(str, list(map(ord, self.dmxdata[1:])))), self.renderToFile))
 			
 
 	def zeroAllChannels(self):

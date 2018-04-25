@@ -1,5 +1,5 @@
 def Interpolate(a, b, p, limit = False):
-	u"""\
+	"""\
 	Interpolate between values a and b at float position p (0-1)
 	Limit: No extrapolation
 	"""
@@ -12,7 +12,7 @@ def Interpolate(a, b, p, limit = False):
 		return i
 
 def Distance(p1, p2):
-	u"""\
+	"""\
 	Return distance between two points definded as (x, y).
 	"""
 	
@@ -21,11 +21,11 @@ def Distance(p1, p2):
 	return math.sqrt( (p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2 )
 
 def NormalizeMinMax(source_floor, source_ceiling, target_floor, target_ceiling, value):
-	u"""\
+	"""\
 	Normalize a value from source scale to target scale.
 	"""
 	
-	source_floor, source_ceiling, target_floor, target_ceiling, value = map(float, (source_floor, source_ceiling, target_floor, target_ceiling, value))
+	source_floor, source_ceiling, target_floor, target_ceiling, value = list(map(float, (source_floor, source_ceiling, target_floor, target_ceiling, value)))
 
 	if target_floor == 0:
 		return (value - source_floor)/(source_ceiling - source_floor) * target_ceiling
@@ -33,7 +33,7 @@ def NormalizeMinMax(source_floor, source_ceiling, target_floor, target_ceiling, 
 		return (value - source_floor)/(source_ceiling - source_floor) * (target_ceiling - target_floor) + target_floor
 
 def InterpolateMany(valuelist, p):
-	u"""\
+	"""\
 	Take a list of values and interpolate them.
 	Returns resulting value and the two values that form the floor and ceiling for that value.
 	value, floor, ceiling = InterpolateMany((0, 1, 2, 3, 4), 0.0)  # Returns (1.0, 1.0, 2.0)
@@ -41,7 +41,7 @@ def InterpolateMany(valuelist, p):
 	value, floor, ceiling = InterpolateMany((0, 1, 2, 3, 4), 0.5)  # Returns (3.0, 3.0, 3.0) (floor and ceiling being identical with value, because it's exactly the middle value)
 	value, floor, ceiling = InterpolateMany((0, 1, 2, 3, 4), 1.0)  # Returns (5.0, 4.0, 5.0)
 	"""
-	valuelist = map(float,valuelist)
+	valuelist = list(map(float,valuelist))
 	p = float(p)
 
 	if len(valuelist) == 1:

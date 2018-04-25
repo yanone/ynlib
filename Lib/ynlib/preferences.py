@@ -16,7 +16,7 @@ class Preferences(object):
 		self.modified = False
 		
 	def get(self, key):
-		if self.preferences.has_key(key):
+		if key in self.preferences:
 			return self.preferences[key]
 		
 	def put(self, key, value):
@@ -38,7 +38,7 @@ class Preferences(object):
 			self.put(key, value)
 	
 	def delete(self, key):
-		if self.preferences.has_key(key):
+		if key in self.preferences:
 			self.preferences.pop(key)
 		self.savePreferences()
 

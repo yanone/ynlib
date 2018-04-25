@@ -5,7 +5,7 @@ from ynlib.system import Execute
 import os, sys
 reload(sys)  
 sys.setdefaultencoding('utf-8')
-import PyPDF2
+from . import PyPDF2
 
 
 
@@ -76,6 +76,6 @@ if __name__ == '__main__':
 #	txt.write(pdf.pageText(0))
 #	txt.close()
 
-	print pdf.pageText(0) 
+	print(pdf.pageText(0)) 
 
-	print 'end'
+	print('end')

@@ -7,26 +7,26 @@ locale = 'de'
 
 datelocale = {
 	'de': {
-		'Jan': u'Januar',
-		'Feb': u'Februar',
-		'Mar': u'März',
-		'Apr': u'April',
-		'May': u'Mai',
-		'Jun': u'Juni',
-		'Jul': u'Juli',
-		'Aug': u'August',
-		'Sep': u'September',
-		'Oct': u'Oktober',
-		'Nov': u'November',
-		'Dec': u'Dezember',
+		'Jan': 'Januar',
+		'Feb': 'Februar',
+		'Mar': 'März',
+		'Apr': 'April',
+		'May': 'Mai',
+		'Jun': 'Juni',
+		'Jul': 'Juli',
+		'Aug': 'August',
+		'Sep': 'September',
+		'Oct': 'Oktober',
+		'Nov': 'November',
+		'Dec': 'Dezember',
 
-		'Mon': u'Montag',
-		'Tue': u'Dienstag',
-		'Wed': u'Mittwoch',
-		'Thu': u'Donnerstag',
-		'Fri': u'Freitag',
-		'Sat': u'Samstag',
-		'Sun': u'Sonntag',
+		'Mon': 'Montag',
+		'Tue': 'Dienstag',
+		'Wed': 'Mittwoch',
+		'Thu': 'Donnerstag',
+		'Fri': 'Freitag',
+		'Sat': 'Samstag',
+		'Sun': 'Sonntag',
 
 		'Karfreitag': 'Karfreitag',
 		'Ostermontag': 'Ostermontag',
@@ -194,7 +194,7 @@ class Day:
 				self.holidayname = None
 
 			# Special Day
-			if time.strftime("%d %b %Y", time.gmtime(self.timestamp)) in specialdays.keys():
+			if time.strftime("%d %b %Y", time.gmtime(self.timestamp)) in list(specialdays.keys()):
 				self.specialday = True
 				self.specialdayname = specialdays[time.strftime("%d %b %Y", time.gmtime(self.timestamp))]
 			else:

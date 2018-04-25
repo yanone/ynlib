@@ -596,11 +596,11 @@ def encryptData(key, data, mode=AESModeOfOperation.modeOfOperation["CBC"]):
     vector.
 
     """
-    key = map(ord, key)
+    key = list(map(ord, key))
     if mode == AESModeOfOperation.modeOfOperation["CBC"]:
         data = append_PKCS7_padding(data)
     keysize = len(key)
-    assert keysize in AES.keySize.values(), 'invalid key size: %s' % keysize
+    assert keysize in list(AES.keySize.values()), 'invalid key size: %s' % keysize
     # create a new iv using random data
     iv = [ord(i) for i in os.urandom(16)]
     moo = AESModeOfOperation()
@@ -620,12 +620,12 @@ def decryptData(key, data, mode=AESModeOfOperation.modeOfOperation["CBC"]):
 
     """
 
-    key = map(ord, key)
+    key = list(map(ord, key))
     keysize = len(key)
-    assert keysize in AES.keySize.values(), 'invalid key size: %s' % keysize
+    assert keysize in list(AES.keySize.values()), 'invalid key size: %s' % keysize
     # iv is first 16 bytes
-    iv = map(ord, data[:16])
-    data = map(ord, data[16:])
+    iv = list(map(ord, data[:16]))
+    data = list(map(ord, data[16:]))
     moo = AESModeOfOperation()
     decr = moo.decrypt(data, None, mode, key, keysize, iv)
     if mode == AESModeOfOperation.modeOfOperation["CBC"]:
@@ -640,7 +640,7 @@ def generateRandomKey(keysize):
     """
     if keysize not in (16, 24, 32):
         emsg = 'Invalid keysize, %s. Should be one of (16, 24, 32).'
-        raise ValueError, emsg % keysize
+        raise ValueError(emsg % keysize)
     return os.urandom(keysize)
 
 if __name__ == "__main__":
@@ -650,7 +650,7 @@ if __name__ == "__main__":
     iv = [103,35,148,239,76,213,47,118,255,222,123,176,106,134,98,92]
     mode, orig_len, ciph = moo.encrypt(cleartext, moo.modeOfOperation["CBC"],
             cypherkey, moo.aes.keySize["SIZE_128"], iv)
-    print 'm=%s, ol=%s (%s), ciph=%s' % (mode, orig_len, len(cleartext), ciph)
+    print('m=%s, ol=%s (%s), ciph=%s' % (mode, orig_len, len(cleartext), ciph))
     decr = moo.decrypt(ciph, orig_len, mode, cypherkey,
             moo.aes.keySize["SIZE_128"], iv)
-    print decr
+    print(decr)

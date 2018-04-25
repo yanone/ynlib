@@ -9,7 +9,7 @@ class Glyph(object):
 	def __init__(self, parent, name, _unicode = None):
 		self.parent = parent
 		self.name = name
-		self.unicode = _unicode
+		self.str = _unicode
 
 		# To be set later
 		self._bounds = None
@@ -17,7 +17,7 @@ class Glyph(object):
 
 	
 	def __repr__(self):
-		return "<ftGlyph '%s' %s>" % (self.name, self.unicode)
+		return "<ftGlyph '%s' %s>" % (self.name, self.str)
 
 	def bounds(self):
 		if not self._bounds:
@@ -38,7 +38,7 @@ class Font(object):
 
 		self._glyphs = {}
 		for table in self.TTFont["cmap"].tables:
-			for cmapEntry in table.cmap.items():
+			for cmapEntry in list(table.cmap.items()):
 				self._addGlyph(cmapEntry[1], cmapEntry[0])
 
 		self.postScriptName = str(self.TTFont['name'].getName(6, 1, 0, 0))
@@ -57,7 +57,7 @@ class Font(object):
 	def tableChecksums(self):
 		import md5
 		checksums = {}
-		for key in self.TTFont.keys():
+		for key in list(self.TTFont.keys()):
 			try:
 				checksums[key] = md5.new(self.TTFont.getTableData(key)).hexdigest()
 			except:
@@ -66,26 +66,26 @@ class Font(object):
 
 	def glyphs(self):
 		# Return all glyphs as list
-		return [self._glyphs[x] for x in self._glyphs.keys()]
+		return [self._glyphs[x] for x in list(self._glyphs.keys())]
 
 	def glyphNames(self):
 		return self.TTFont.getGlyphNames()
 
 	def glyph(self, key):
 		# Return single glyph
-		if self._glyphs.has_key(key):
+		if key in self._glyphs:
 			return self._glyphs[key]
 		# by Unicode
 		else:
 			for glyph in self.glyphs():
-				if key == glyph.unicode:
+				if key == glyph.str:
 					return glyph
 
 	def unicodes(self):
 		if not self._unicodes:
 			for g in self.glyphs():
-				if g.unicode:
-					self._unicodes.append(g.unicode)
+				if g.str:
+					self._unicodes.append(g.str)
 		return self._unicodes
 
 	def features(self):
@@ -162,7 +162,7 @@ class Font(object):
 	def boundsByUnicodes(self, unicodes):
 		_glyphs = []
 		for glyph in self.glyphs():
-			if glyph.unicode in unicodes:
+			if glyph.str in unicodes:
 				_glyphs.append(glyph)
 		return self.boundsWithGlyphs(_glyphs)
 
@@ -218,7 +218,7 @@ class Font(object):
 			
 		ready = len(oversize) == len(duplicates)
 		if not ready:
-			print set(oversize) - set(duplicates)
+			print(set(oversize) - set(duplicates))
 		return ready
 
 
@@ -310,7 +310,7 @@ class Font(object):
 			unicodes = []
 			for t in self.TTFont['cmap'].tables:
 				if t.isUnicode():
-					unicodes.extend(t.cmap.keys())
+					unicodes.extend(list(t.cmap.keys()))
 			subsetter.populate(unicodes = unicodes)
 			subsetter.subset(self.TTFont)
 
@@ -331,7 +331,7 @@ if __name__ == "__main__":
 	f.write(newIO.getvalue())
 	f.close()
 
-	print round(os.path.getsize(new) / float(os.path.getsize(original)) * 100), '%'
+	print(round(os.path.getsize(new) / float(os.path.getsize(original)) * 100), '%')
 	font = Font(original)
 	newFont = Font(new)
 	# for key in font.TTFont.keys():

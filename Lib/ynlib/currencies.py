@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import time
-from strings import *
+from .strings import *
 
 def convertToEUR(source, amount = 1.0, timestamp = None):
-	u"""/
+	"""/
 	
 	"""
-	from web import GetHTTP
+	from .web import GetHTTP
 	import json
 
 

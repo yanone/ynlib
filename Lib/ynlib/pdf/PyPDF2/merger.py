@@ -33,7 +33,7 @@ from .pdf import PdfFileReader, PdfFileWriter
 from .pagerange import PageRange
 from sys import version_info
 if version_info < ( 3, 0 ):
-    from cStringIO import StringIO
+    from io import StringIO
     StreamIO = StringIO
 else:
     from io import BytesIO

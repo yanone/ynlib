@@ -1,7 +1,7 @@
 import platform
 
 def Execute(command):
-	u"""\
+	"""\
 	Execute system command, return output.
 	"""
 
@@ -26,14 +26,14 @@ def Execute(command):
 		return response
 
 def Stamina():
-	u"""\
+	"""\
 	Calculate system power as integer using by mulitplying number of active CPUs with clock speed.
 	"""
 	from ynlib.system import Execute
 	return int(Execute('sysctl hw.activecpu').split(' ')[-1]) * int(Execute('sysctl hw.cpufrequency').split(' ')[-1])
 
 def MD5OfFile(filename):
-	u"""\
+	"""\
 	Calculate hex MD5 sum of file.
 	"""
 	import hashlib
@@ -54,7 +54,7 @@ import fcntl
 import time
 
 def GetChr(waitMaximalSeconds = None):
-	u"""\
+	"""\
 	Wait for single keyboard press and return character
 	"""
 
@@ -137,6 +137,6 @@ def MachineName():
 		return 'Apple %s (%s) with %s %s, %s memory' % (name, data[0]['_items'][0]['machine_model'], data[0]['_items'][0]['cpu_type'], data[0]['_items'][0]['current_processor_speed'], data[0]['_items'][0]['physical_memory'])
 
 if __name__ == '__main__':
-	print MachineName()
+	print(MachineName())
 	# print MachineName()[0]['_items']
 	# print MachineName()[0]['_items'][0]['machine_name']

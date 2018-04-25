@@ -14,7 +14,7 @@ class Histogram(object):
 		self.values = {}
 	
 	def addValue(self, x, addition = 1):
-		if self.values.has_key(x):
+		if x in self.values:
 			self.values[x] += addition
 		else:
 			self.values[x] = addition
@@ -36,7 +36,7 @@ class Histogram(object):
 		
 		matrix = ('_' * width + '\n') * height
 		
-		for x in self.values.keys():
+		for x in list(self.values.keys()):
 			for y in range(self.values[x]):
 				
 				if not scaleYMax:

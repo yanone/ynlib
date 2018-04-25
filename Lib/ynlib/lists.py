@@ -1,5 +1,5 @@
 def ListPairs(list, num_pairs):
-	u"""\
+	"""\
 	Return 'num_pairs' amount of elements of list stacked together as lists.
 	Example:
 	list = ['a', 'b', 'c', 'd', 'e']
@@ -23,7 +23,7 @@ def ListPairs(list, num_pairs):
 
 
 def NaturalSort(l):
-	u"""\
+	"""\
 	Sort list in natural alpha-numeric order
 	file1.jpg, file2.jpg, file10.jpg
 	"""

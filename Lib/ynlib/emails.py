@@ -37,7 +37,7 @@ def SendEmail(recipients, sender, subject, body, attachments = None):
 
 
 class Email(object):
-	u"""\
+	"""\
 	Send email.
 	recipients = ('post@example.com', 'another@example.com')
 	"""

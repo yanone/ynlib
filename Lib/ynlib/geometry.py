@@ -1,5 +1,5 @@
 def RotatePointAroundPoint(c, p, a):
-	u"""Rotate point p around center point c with a degrees of angle."""
+	"""Rotate point p around center point c with a degrees of angle."""
 
 	import math
 	
@@ -12,7 +12,7 @@ def RotatePointAroundPoint(c, p, a):
 
 
 def SmallerAngleBetweenLines(p1, p2, p3, p4):
-	u"""Calculate the angle between the line from p1 to p2
+	"""Calculate the angle between the line from p1 to p2
 	and the line from p3 to p4.
 	It always returns the smaller angle of a full circle (360 degrees)."""
 	
@@ -36,7 +36,7 @@ def SmallerAngleBetweenLines(p1, p2, p3, p4):
 
 
 def clockwise(p1, p2, p3):
-	u"""\
+	"""\
 	Returns True for clockwise, False for counterclockwise
 	"""
 	v1 = p2 - p1
@@ -49,14 +49,14 @@ def clockwise(p1, p2, p3):
 
 
 def pointInTriangle(p, t1, t2, t3):
-	u"""\
+	"""\
 	True if point p is in triangle t.
 	"""
 	return (clockwise(p, t1, t2) and clockwise(p, t2, t3) and clockwise(p, t3, t1)) or (not clockwise(p, t1, t2) and not clockwise(p, t2, t3) and not clockwise(p, t3, t1))
 
 
 def triangulate(polyline):
-	u"""\
+	"""\
 	Returns list of triangles in tuples of three points, calculated using poly2tri (Google Code).
 	"""
 	import p2t

@@ -2,7 +2,7 @@ def SetMouseSpeed(speed):
 
 	from ynlib.mac import ExecuteAppleScript
 	
-	script = u"""\
+	script = """\
 tell application "System Preferences" to activate
 
 tell application "System Preferences"
@@ -25,7 +25,7 @@ def SetKeyboardLanguage():
 	pass
 
 def Growl(message, iconfiletype = None, iconapp = None):
-	u"""\
+	"""\
 	Display messages using Growl
 	"""
 	
@@ -39,7 +39,7 @@ def Growl(message, iconfiletype = None, iconapp = None):
 		return Execute('/usr/local/bin/growlnotify -m "%s"' % (message))
 
 def GrowlError(message):
-	u"""\
+	"""\
 	Display messages using Growl
 	"""
 	
