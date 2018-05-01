@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import sys, certifi
+
 def GetHTTP(url, timeout = 5, authentication = None):
 	"""\
 	GET HTTP responses from the net. Returns False if attempt failed.
@@ -7,7 +9,7 @@ def GetHTTP(url, timeout = 5, authentication = None):
 	"""
 
 
-	import urllib.request, urllib.error, urllib.parse, base64, certifi
+	import urllib.request, urllib.error, urllib.parse, base64
 
 
 	request = urllib.request.Request(url)
@@ -17,24 +19,18 @@ def GetHTTP(url, timeout = 5, authentication = None):
 	result = urllib.request.urlopen(request, cafile=certifi.where())
 
 
-
-
-
-#	result = urllib2.urlopen(url, timeout = timeout)
-#	request = urllib2.urlopen(url)
 	if result.getcode() == 200:
-		encoding = result.headers['content-type'].split('charset=')[-1]
+
 		content = result.read()
-		#print encoding
-		try:
+
+		if 'charset=' in result.headers['content-type']:
+			encoding = result.headers['content-type'].split('charset=')[-1]
 			content = str(content, encoding)
-		except:
-			pass
-		return content
+
+		return content.decode('utf-8')
 	else:
 		return False
-#	except:
-#		return False
+
 
 def PostHTTP(url, values = {}, data = None, authentication = None, contentType = None, files = []):
 	"""\
@@ -63,18 +59,11 @@ def PostHTTP(url, values = {}, data = None, authentication = None, contentType =
 	response = urllib.request.urlopen(request)
 	return response.read()
 
-def PostFiles(url, values):
+def PostFiles(url, values = {}, files = {}):
 
-	import urllib.request, urllib.error, urllib.parse
+	import requests
+	return requests.post(url, data=values, files=files)
 
-	import poster.encode
-	import poster.streaminghttp
-
-	opener = poster.streaminghttp.register_openers()
-
-	datagen, headers = poster.encode.multipart_encode(values)
-	response = opener.open(urllib.request.Request(url, datagen, headers))
-	return response.read()
 
 def WhatsMyIP():
 	"""Pull your network's public IP address from the net, using whatsmyip.net"""
