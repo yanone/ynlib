@@ -87,8 +87,7 @@ class Color(object):
 		"""\
 		Convert float (R, G, B) tuple to RRGGBB hex value (without #).
 		"""
-		import string
-		self.hex = (string.zfill(str(hex(self.R)[2:]), 2) + string.zfill(str(hex(self.G)[2:]), 2) + string.zfill(str(hex(self.B)[2:]), 2)).upper()
+		self.hex = (str(hex(self.R)[2:]).zfill(2) + str(hex(self.G)[2:]).zfill(2) + str(hex(self.B)[2:]).zfill(2)).upper()
 
 
 

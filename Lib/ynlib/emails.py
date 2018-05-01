@@ -1,15 +1,16 @@
 # Import smtplib for the actual sending function
 import smtplib, os, base64
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email.MIMEText import MIMEText
-from email.Utils import COMMASPACE, formatdate
-from email import Encoders
+
+
+
+from email.utils import COMMASPACE, formatdate
+import email.encoders
 from email.header import Header
 
 # Import the email modules we'll need
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
 
 
 
@@ -78,10 +79,9 @@ class Email(object):
 		
 		s = smtplib.SMTP('localhost')
 		
-		from sets import Set
-		recipients = Set(self.recipients)
-		recipients.update(Set(self.CC))
-		recipients.update(Set(self.BCC))
+		recipients = set(self.recipients)
+		recipients.update(set(self.CC))
+		recipients.update(set(self.BCC))
 		
 		s.sendmail(self.sender, list(recipients), msg.as_string())
 		s.quit()
@@ -123,7 +123,7 @@ class EmailAttachment(object):
 		elif self.binary:
 			self.part.set_payload(self.binary)
 
-		Encoders.encode_base64(self.part)
+		email.encoders.encode_base64(self.part)
 		if self.filename:
 			self.part.add_header('Content-Disposition', 'attachment; filename="%s"' % self.filename)
 		elif self.path:

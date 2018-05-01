@@ -5,7 +5,7 @@ from ynlib.system import Execute
 import os, sys
 reload(sys)  
 sys.setdefaultencoding('utf-8')
-from . import PyPDF2
+import PyPDF2
 
 
 
