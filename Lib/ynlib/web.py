@@ -27,7 +27,8 @@ def GetHTTP(url, timeout = 5, authentication = None):
 			encoding = result.headers['content-type'].split('charset=')[-1]
 			content = str(content, encoding)
 
-		return content.decode('utf-8')
+		return content
+#		return content.decode('utf-8')
 	else:
 		return False
 

@@ -47,16 +47,17 @@ def MD5OfFile(filename):
 
 
 
-import os
-import sys    
-import termios
-import fcntl
-import time
 
 def GetChr(waitMaximalSeconds = None):
 	"""\
 	Wait for single keyboard press and return character
 	"""
+
+	import os
+	import sys    
+	import termios
+	import fcntl
+	import time
 
 	firstCallTime = time.time()
 

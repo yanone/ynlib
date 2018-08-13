@@ -15,7 +15,7 @@ def WriteToFile(path, string):
 	"""\
 	Write content to file
 	"""
-	f = open(path, 'w')
-	f.write(string.encode('utf8'))
+	f = open(path, 'wb')
+	f.write(string.encode())
 	f.close()
 	return True

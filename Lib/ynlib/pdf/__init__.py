@@ -3,8 +3,6 @@
 
 from ynlib.system import Execute
 import os, sys
-reload(sys)  
-sys.setdefaultencoding('utf-8')
 import PyPDF2
 
 
@@ -16,7 +14,7 @@ class PDF(object):
 		self.pypdf = PyPDF2.PdfFileReader(self.path)
 		self.amountPages = len(self.pypdf.pages)
 
-		architecture = Execute('uname -a')
+		architecture = str(Execute('uname -a'))
 
 		if '86_64' in architecture:
 			bit = '64'
@@ -42,7 +40,9 @@ class PDF(object):
 			os.remove(tempTextFile)
 
 		call = '"%s" -f %s -l %s -enc UTF-8 -table "%s" "%s"' % (self.binary, pageNumber + 1, pageNumber + 1, self.path, tempTextFile)
-		Execute(call)
+
+
+		returnString = Execute(call)
 
 		text = open(tempTextFile, 'r').read()
 
