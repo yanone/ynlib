@@ -622,3 +622,32 @@ def kashidaSentence(string, length):
 	else:
 		return string
 
+
+def addAttributeToURL(url, attribute):
+
+
+	if '?' in url:
+
+		if '=' in attribute and len(attribute.split('=')) == 2 and attribute.split('=')[0] + '=' in url:
+			key, value = attribute.split('=')
+
+			url, attributes = url.split('?')
+			attributes = attributes.split('&')
+			newAttributes = []
+			for oldAttribute in attributes:
+				if oldAttribute.startswith(key + '='):
+					newAttributes.append(key + '=' + value)
+				else:
+					newAttributes.append(oldAttribute)
+
+			return url + '?' + ('&'.join(newAttributes))
+		else:
+			return url + '&' + attribute
+	else:
+		return url + '?' + attribute
+
+
+print(addAttributeToURL('https://www.fontspring.com/', 'refby=typeworld'))
+print(addAttributeToURL('https://www.fontspring.com/?hello=world', 'refby=typeworld'))
+print(addAttributeToURL('https://www.fontspring.com/?hello=world&refby=otherthing', 'refby=typeworld'))
+print(addAttributeToURL('https://www.fontspring.com/?refby=otherthing&hello=world', 'refby=typeworld'))
