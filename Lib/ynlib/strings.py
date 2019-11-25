@@ -627,29 +627,24 @@ def kashidaSentence(string, length):
 
 def addAttributeToURL(url, attribute):
 
+	key, value = attribute.split('=')
 
-	if '?' in url:
+	from urllib.parse import urlparse
+	o = urlparse(url)
 
-		if '=' in attribute and len(attribute.split('=')) == 2 and attribute.split('=')[0] + '=' in url:
-			key, value = attribute.split('=')
-
-			url, attributes = url.split('?')
-			attributes = attributes.split('&')
-			newAttributes = []
-			for oldAttribute in attributes:
-				if oldAttribute.startswith(key + '='):
-					newAttributes.append(key + '=' + value)
-				else:
-					newAttributes.append(oldAttribute)
-
-			return url + '?' + ('&'.join(newAttributes))
+	replaced = False
+	queryParts = o.query.split('&')
+	if queryParts:
+		for i, query in enumerate(queryParts):
+			if '=' in query and query.startswith(key + '='):
+				queryParts[i] = attribute
+				replaced = True
+				break
+	if not replaced:
+		if queryParts[0]:
+			queryParts.append(attribute)
 		else:
-			return url + '&' + attribute
-	else:
-		return url + '?' + attribute
+			queryParts[0] = attribute
+	o = o._replace(query='&'.join(queryParts))
 
-
-print(addAttributeToURL('https://www.fontspring.com/', 'refby=typeworld'))
-print(addAttributeToURL('https://www.fontspring.com/?hello=world', 'refby=typeworld'))
-print(addAttributeToURL('https://www.fontspring.com/?hello=world&refby=otherthing', 'refby=typeworld'))
-print(addAttributeToURL('https://www.fontspring.com/?refby=otherthing&hello=world', 'refby=typeworld'))
+	return o.geturl()
