@@ -24,7 +24,7 @@ def convertToEUR(source, amount = 1.0, timestamp = None):
 		url = 'http://www.apilayer.net/api/live?access_key=2c17819a3f130af5f5e867c77a362d27'
 		url += '&currencies=%s' % source.upper()
 		
-		reply = json.loads(GetHTTP(url))
+		reply = json.loads(GetHTTP(url).decode())
 		if reply['success'] == True:
 
 			# historical
