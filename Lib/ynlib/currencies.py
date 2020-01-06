@@ -40,7 +40,7 @@ def convertToEUR(source, amount = 1.0, timestamp = None):
 				if timestamp:
 					url += '&timestamp=%s' % timestamp
 		
-			reply = json.loads(GetHTTP(url))
+			reply = json.loads(GetHTTP(url).decode())
 		
 		
 			base = reply['source']

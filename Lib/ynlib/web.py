@@ -42,8 +42,10 @@ def PostHTTP(url, values = {}, data = None, authentication = None, contentType =
 
 	import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, base64
 	
-	if values:
-		data = urllib.parse.urlencode(values)
+	if data:
+		data = urllib.parse.urlencode(data).encode('ascii')
+	elif values:
+		data = urllib.parse.urlencode(values).encode('ascii')
 		
 	headers = {}
 
@@ -52,8 +54,12 @@ def PostHTTP(url, values = {}, data = None, authentication = None, contentType =
 		headers["Content-Type"] = contentType
 		headers["Accept"] = contentType
 
-	if authentication:
-		base64string = base64.encodestring(authentication)
+	if authentication and type(authentication) == str:
+		base64string = base64.encodestring(authentication.encode())
+		headers["Authorization"] = "Basic %s" % base64string
+
+	elif authentication and type(authentication) in (tuple, list):
+		base64string = base64.encodestring(b'%s:%s' % (authentication[0].encode(), authentication[1].encode()))
 		headers["Authorization"] = "Basic %s" % base64string
 
 	request = urllib.request.Request(url, data = data, headers = headers)
