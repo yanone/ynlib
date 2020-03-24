@@ -260,9 +260,7 @@ def RGBtoHex(color):
 	"""\
 	Convert float (R, G, B) tuple to RRGGBB hex value (without #).
 	"""
-	import string
-	
-	return string.zfill(str(hex(int(color[0] * 255))[2:]), 2) + string.zfill(str(hex(int(color[1] * 255))[2:]), 2) + string.zfill(str(hex(int(color[2] * 255))[2:]), 2)
+	return str(hex(int(color[0] * 255))[2:]).zfill(2) + str(hex(int(color[1] * 255))[2:]).zfill(2) + str(hex(int(color[2] * 255))[2:]).zfill(2)
 
 def Multiply255(color):
 	"""\
