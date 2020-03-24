@@ -1,4 +1,3 @@
-import platform
 
 def Execute(command):
 	"""\
@@ -91,6 +90,8 @@ def GetChr(waitMaximalSeconds = None):
 
 
 def MachineName():
+	import platform
+
 	if platform.system() == 'Linux':
 		
 		cpu = ''
