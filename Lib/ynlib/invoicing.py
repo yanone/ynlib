@@ -20,13 +20,10 @@ class EUInvoicing(object):
 
 		# EU, private
 		elif self.clientCountry in list(self.EUwithVATdict.keys()) and self.clientVATID == None:
-			self.tax = self.netto * self.taxPercent(self.homeCountry)
+			self.tax = self.netto * self.taxPercent(self.clientCountry)
 			self.brutto = self.netto + self.tax
-			self.taxPercentage = self.EUwithVATdict[self.homeCountry]
-			# self.tax = self.netto * self.taxPercent(self.clientCountry)
-			# self.brutto = self.netto + self.tax
-			# self.taxPercentage = self.EUwithVATdict[self.clientCountry]
-			# self.EUprivate = True
+			self.taxPercentage = self.EUwithVATdict[self.clientCountry]
+			self.EUprivate = True
 
 		# EU, company
 		elif self.clientCountry in list(self.EUwithVATdict.keys()) and self.clientVATID != None:
