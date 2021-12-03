@@ -46,6 +46,6 @@ def imageFileDimensions(path):
 	from ynlib.system import Execute
 	import re
 	
-	identify = Execute('identify -ping "%s"' % path)
+	identify = Execute('identify -ping "%s"' % path).encode()
 	m = re.match(r".*?(\d+)x(\d+).*?", identify)
 	return (int(m.group(1)), int(m.group(2)))

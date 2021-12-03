@@ -62,57 +62,59 @@ def AutoLinkString(string):
 	- Twitter @names and #hashtags
 	- Web links (starting with http)
 	"""
-	import re
 
-	# email
-	string = re.sub("(([a-zA-Z0-9._\-]+)@([a-zA-Z0-9\._-]+))", "<a href=\"mailto:\\1\">\\1</a>", string)
+	if string:
 
-	# http
-	def repl(r):
-		output = []
-		output.append('<a href="')
+		import re
+		# email
+		string = re.sub("(([a-zA-Z0-9._\-]+)@([a-zA-Z0-9\._-]+))", "<a href=\"mailto:\\1\">\\1</a>", string)
 
-		http = r.group(1) or 'http://'
-		if not http.startswith('http'):
-			http  = 'http://' + http
+		# http
+		def repl(r):
+			output = []
+			output.append('<a href="')
 
-		# remove punctuation at the end
-		group2 = r.group(2)
-		for s in ['.']:
-			group2 = group2.split(s)
-			if group2[-1] == '':
-				punctuation = s
-				group2 = s.join(group2[:-1])
-			else:
-				punctuation = ''
-				group2 = s.join(group2)
+			http = r.group(1) or 'http://'
+			if not http.startswith('http'):
+				http  = 'http://' + http
+
+			# remove punctuation at the end
+			group2 = r.group(2)
+			for s in ['.']:
+				group2 = group2.split(s)
+				if group2[-1] == '':
+					punctuation = s
+					group2 = s.join(group2[:-1])
+				else:
+					punctuation = ''
+					group2 = s.join(group2)
+				
 			
+			if '/' in group2:
+
+				domain = group2.split('/')[0]
+				path = group2.split('/')[1:]
+			
+			else:
+				domain = group2
+				path = ''
+
+			shortDomain = domain.split('.')[-2] + '.' + domain.split('.')[-1]
+			URL = http + domain + '/' + '/'.join(path)
+			
+			output.append(URL)
 		
-		if '/' in group2:
-
-			domain = group2.split('/')[0]
-			path = group2.split('/')[1:]
+			output.append('">')
+			output.append(shortDomain)
+			output.append('</a>')
+			output.append(punctuation)
 		
-		else:
-			domain = group2
-			path = ''
+			return ''.join(output)
 
-		shortDomain = domain.split('.')[-2] + '.' + domain.split('.')[-1]
-		URL = http + domain + '/' + '/'.join(path)
-		
-		output.append(URL)
-	
-		output.append('">')
-		output.append(shortDomain)
-		output.append('</a>')
-		output.append(punctuation)
-	
-		return ''.join(output)
+		string = re.sub(r"\b(http://|https://|www\.)(.+)?", repl, string)
+	#	string = re.sub(r"\b(http://|https://|www\.)([a-zA-Z0-9-\.\/]+)?", repl, string)
 
-	string = re.sub(r"\b(http://|https://|www\.)(.+)?", repl, string)
-#	string = re.sub(r"\b(http://|https://|www\.)([a-zA-Z0-9-\.\/]+)?", repl, string)
-
-	return string
+		return string
 
 
 
@@ -466,7 +468,7 @@ def formatPrice(price = 0, currencySymbol = None, numberSeparator = '.', locale 
 		part0.reverse()
 	
 		string = negative + thousandSeparator.join(part0) + numberSeparator + parts[1][:decimals]
-		string = string.replace('-', '–&#x2060;')
+#		string = string.replace('-', '–&#x2060;')
 	
 		if currencySymbol:
 			string += currencySymbol

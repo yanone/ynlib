@@ -1,4 +1,6 @@
-morseAlphabet ={
+import os
+
+morseAlphabet = {
     "A" : ".-",
     "B" : "-...",
     "C" : "-.-.",

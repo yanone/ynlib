@@ -24,6 +24,7 @@ def Execute(command):
 		process.stdout.close()
 		return response
 
+
 def Stamina():
 	"""\
 	Calculate system power as integer using by mulitplying number of active CPUs with clock speed.

@@ -63,7 +63,7 @@ def PostHTTP(url, values = {}, data = None, authentication = None, contentType =
 		headers["Authorization"] = "Basic %s" % base64string
 
 	request = urllib.request.Request(url, data = data, headers = headers)
-	response = urllib.request.urlopen(request)
+	response = urllib.request.urlopen(request, cafile=certifi.where())
 	return response.read()
 
 def PostFiles(url, values = {}, files = {}):
